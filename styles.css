@@ -269,3 +269,65 @@ input:focus, textarea:focus, select:focus{border-color: rgba(90,167,255,.55); bo
   color: #666 !important;
   opacity: 1;
 }
+/* HubSpot Form Styling Fix (match RTU-X site) */
+.hs-form,
+.hs-form * {
+  font-family: inherit;
+}
+
+/* Labels */
+.hs-form label,
+.hs-form .hs-form-field label {
+  color: rgba(255,255,255,0.92) !important;
+  font-weight: 600 !important;
+}
+
+/* Help text / errors */
+.hs-form .hs-form-required,
+.hs-form .hs-error-msg,
+.hs-form .hs-error-msgs label {
+  color: rgba(255,255,255,0.92) !important;
+}
+
+/* Inputs */
+.hs-form input,
+.hs-form textarea,
+.hs-form select {
+  color: #111 !important;
+  background: rgba(255,255,255,0.86) !important; /* NOT pure white */
+  border: 1px solid rgba(255,255,255,0.28) !important;
+  border-radius: 10px !important;
+  padding: 12px 12px !important;
+  outline: none !important;
+}
+
+/* Placeholder */
+.hs-form ::placeholder {
+  color: rgba(0,0,0,0.55) !important;
+  opacity: 1 !important;
+}
+
+/* Focus state */
+.hs-form input:focus,
+.hs-form textarea:focus,
+.hs-form select:focus {
+  border-color: rgba(255,255,255,0.75) !important;
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.18) !important;
+}
+
+/* Submit button */
+.hs-form input[type="submit"],
+.hs-form .hs-button {
+  background: rgba(255,255,255,0.92) !important;
+  color: #111 !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 12px 16px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+}
+
+.hs-form input[type="submit"]:hover,
+.hs-form .hs-button:hover {
+  filter: brightness(0.96) !important;
+}
