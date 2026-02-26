@@ -249,3 +249,23 @@ input:focus, textarea:focus, select:focus{border-color: rgba(90,167,255,.55); bo
   opacity:1;
   transform: translateY(0);
 }
+/* HubSpot Form Styling Fix */
+
+.hs-form label,
+.hs-form .hs-form-field label {
+  color: #1a1a1a !important;
+  font-weight: 500;
+}
+
+.hs-form input,
+.hs-form textarea,
+.hs-form select {
+  color: #1a1a1a !important;
+  background-color: #ffffff !important;
+  border: 1px solid #ccc !important;
+}
+
+.hs-form ::placeholder {
+  color: #666 !important;
+  opacity: 1;
+}
