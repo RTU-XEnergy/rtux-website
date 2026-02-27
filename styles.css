@@ -331,3 +331,9 @@ input:focus, textarea:focus, select:focus{border-color: rgba(90,167,255,.55); bo
 .hs-form .hs-button:hover {
   filter: brightness(0.96) !important;
 }
+/* SAFETY OVERRIDE: always show sections even if animation JS/CSS misbehaves */
+.reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
