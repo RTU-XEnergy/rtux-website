@@ -182,7 +182,7 @@ function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
-
+       console.log("HubSpot response status:", res.status);
       if (!res.ok) {
         const text = await res.text().catch(() => "");
         console.error("HubSpot submission failed:", res.status, text);
