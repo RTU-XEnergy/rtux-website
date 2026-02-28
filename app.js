@@ -161,20 +161,19 @@ function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel
     const endpoint = `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
 
     const payload = {
-      fields: [
-        { name: "firstname", value: firstName },
-        { name: "lastname", value: lastName },
-        { name: "email", value: email },
-        { name: "phone", value: getVal("phone") },
-        { name: "company", value: getVal("company") },
-        { name: "number_of_locations", value: getVal("locations") },
-        { name: "message", value: getVal("message") }
-      ],
-      context: {
-        pageUri: window.location.href,
-        pageName: document.title
-      }
-    };
+    fields: [
+  { name: "firstname", value: firstName },
+  { name: "lastname", value: lastName },
+  { name: "email", value: email },
+  { name: "phone", value: getVal("phone") },
+  { name: "company", value: getVal("company") },
+
+  { name: "number_of_locations", value: getVal("locations") },
+  { name: "avg_rtus_per_location", value: getVal("rtus") },
+  { name: "annual_hvac_spend", value: getVal("spend") },
+
+  { name: "message", value: getVal("msg") }
+],
 
     try {
       const res = await fetch(endpoint, {
