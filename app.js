@@ -1,202 +1,210 @@
-/* RTU-X Website JS
-   - Section reveal animations
-   - ROI calculator
-   - Lead form submission to HubSpot (no mailto popups)
-*/
+(() => {
+  "use strict";
 
-// -------------------------
-// Helpers
-// -------------------------
-function qs(sel, root = document) { return root.querySelector(sel); }
-function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
+  // ---------- Helpers ----------
+  const qs = (sel, root = document) => root.querySelector(sel);
 
-// -------------------------
-// Footer year
-// -------------------------
-(function setYear() {
-  const y = qs("#year");
-  if (y) y.textContent = new Date().getFullYear();
-})();
+  const fmtUSD = (n) => {
+    const x = Number(n);
+    if (!isFinite(x)) return "$0";
+    return x.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  };
 
-// -------------------------
-// Reveal on scroll (simple)
-// -------------------------
-(function revealOnScroll() {
-  const els = qsa(".reveal");
-  if (!els.length) return;
+  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add("in");
-          io.unobserve(e.target);
-        }
-      });
-    },
-    { threshold: 0.12 }
-  );
+  // Run after DOM ready
+  const ready = (fn) => {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn, { once: true });
+    else fn();
+  };
 
-  els.forEach((el) => io.observe(el));
-})();
+  ready(() => {
+    // ---------- ROI CALCULATOR ----------
+    const annualSpendEl = qs("#annualSpend");
+    const savingsPctEl = qs("#savingsPct");
+    const systemCostEl = qs("#systemCost");
+    const roiResultEl = qs("#roiResult");
+    const calcBtn = qs("#calcBtn");
+    const emailEstimateBtn = qs("#emailEstimateBtn");
 
-// -------------------------
-// ROI Calculator
-// -------------------------
-(function roiCalc() {
-  const form = qs("#roiForm");
-  if (!form) return;
+    function computeROI() {
+      const annualSpend = Number(annualSpendEl?.value || 0);
+      const savingsPct = Number(savingsPctEl?.value || 0);
+      const systemCost = Number(systemCostEl?.value || 0);
 
-  const annualSpendEl = qs("#annualSpend", form);
-  const savingsPctEl = qs("#savingsPct", form);
-  const systemCostEl = qs("#systemCost", form);
-  const resultEl = qs("#roiResult");
-  const calcBtn = qs("#calcBtn");
-  const emailBtn = qs("#emailEstimateBtn");
+      const pct = clamp(savingsPct, 0, 90) / 100;
+      const annualSavings = annualSpend * pct;
+      const paybackYears = annualSavings > 0 ? systemCost / annualSavings : Infinity;
 
-  function fmtUSD(n) {
-    try {
-      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
-    } catch {
-      return "$" + Math.round(n).toString();
-    }
-  }
-
-  function compute() {
-    const annualSpend = Number(annualSpendEl?.value || 0);
-    const savingsPct = Number(savingsPctEl?.value || 0) / 100;
-    const systemCost = Number(systemCostEl?.value || 0);
-
-    const annualSavings = annualSpend * savingsPct;
-    const paybackYears = annualSavings > 0 ? (systemCost / annualSavings) : Infinity;
-
-    return { annualSpend, savingsPct: savingsPct * 100, systemCost, annualSavings, paybackYears };
-  }
-
-  function render() {
-    const { annualSavings, paybackYears } = compute();
-
-    if (!isFinite(paybackYears) || paybackYears <= 0) {
-      resultEl.textContent = "Enter values to estimate payback.";
-      return;
+      return { annualSpend, savingsPct: clamp(savingsPct, 0, 90), systemCost, annualSavings, paybackYears };
     }
 
-    const months = paybackYears * 12;
-    resultEl.textContent =
-      `Estimated annual savings: ${fmtUSD(annualSavings)} • Estimated payback: ${paybackYears.toFixed(1)} years (${Math.round(months)} months)`;
-  }
+    function renderROI() {
+      if (!roiResultEl) return;
+      const { annualSpend, savingsPct, systemCost, annualSavings, paybackYears } = computeROI();
 
-  calcBtn?.addEventListener("click", render);
-  ["input", "change"].forEach((evt) => {
-    annualSpendEl?.addEventListener(evt, render);
-    savingsPctEl?.addEventListener(evt, render);
-    systemCostEl?.addEventListener(evt, render);
-  });
-
-  // Optional: pre-fill lead form message when user clicks "Email me this estimate"
-  emailBtn?.addEventListener("click", () => {
-    const leadMsg = qs("#message");
-    const { annualSpend, savingsPct, systemCost, annualSavings, paybackYears } = compute();
-    if (leadMsg) {
-      const line =
-        `ROI estimate from site:\n- Annual HVAC spend: ${fmtUSD(annualSpend)}\n- Expected savings: ${savingsPct}%\n- Installed investment: ${fmtUSD(systemCost)}\n- Estimated annual savings: ${fmtUSD(annualSavings)}\n- Estimated payback: ${paybackYears.toFixed(1)} years\n`;
-      if (!leadMsg.value) leadMsg.value = line;
-      else if (!leadMsg.value.includes("ROI estimate from site")) leadMsg.value += "\n\n" + line;
-    }
-  });
-
-  render();
-})();
-
-// -------------------------
-// HubSpot Lead Capture (site-styled form)
-// -------------------------
-(function hubspotLeadCapture() {
-  const form = qs("#leadForm");
-  if (!form) return;
-
-  let isSubmitting = false;
-
-  // Inline status
-  let statusEl = qs(".form-status", form);
-  if (!statusEl) {
-    statusEl = document.createElement("div");
-    statusEl.className = "form-status";
-    statusEl.style.marginTop = "12px";
-    statusEl.style.fontSize = "14px";
-    statusEl.style.opacity = "0.95";
-    form.appendChild(statusEl);
-  }
-
-  function setStatus(message, type) {
-    statusEl.textContent = message;
-    if (type === "ok") statusEl.style.color = "#7CFCB0";
-    else if (type === "err") statusEl.style.color = "#FFB4B4";
-    else statusEl.style.color = "#E7EDF7";
-  }
-
-  function getVal(name) {
-    const el = qs(`[name="${name}"]`, form);
-    return el ? String(el.value || "").trim() : "";
-  }
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (isSubmitting) return;
-
-    const firstName = getVal("firstName");
-    const lastName = getVal("lastName");
-    const email = getVal("email");
-
-    if (!firstName || !lastName || !email) {
-      setStatus("Please complete First name, Last name, and Email.", "err");
-      return;
-    }
-
-    isSubmitting = true;
-    setStatus("Submitting…", "info");
-
-    const portalId = "245308395";
-    const formId = "e71670fc-ea6b-4840-a91e-759ff3a2ea30";
-    const endpoint = `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
-
-    const payload = {
-    fields: [
-  { name: "firstname", value: firstName },
-  { name: "lastname", value: lastName },
-  { name: "email", value: email },
-  { name: "phone", value: getVal("phone") },
-  { name: "company", value: getVal("company") },
-
-  { name: "number_of_locations", value: getVal("locations") },
-  { name: "avg_rtus_per_location", value: getVal("rtus") },
-  { name: "annual_hvac_spend", value: getVal("spend") },
-
-  { name: "message", value: getVal("msg") }
-],
-
-    try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-       console.log("HubSpot response status:", res.status);
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        console.error("HubSpot submission failed:", res.status, text);
-        setStatus("Submitted, but CRM sync failed. Please email us at dan@rtu-x.com.", "err");
-        isSubmitting = false;
+      if (!annualSpend || !systemCost) {
+        roiResultEl.textContent = "Enter values to estimate payback.";
         return;
       }
 
-      setStatus("✅ Thanks — we received your request. We’ll reach out shortly.", "ok");
-      form.reset();
-    } catch (err) {
-      console.error("HubSpot submission error:", err);
-      setStatus("Connection issue. Please email us at dan@rtu-x.com.", "err");
-    } finally {
-      isSubmitting = false;
+      if (!isFinite(paybackYears)) {
+        roiResultEl.textContent = "Savings must be greater than $0 to estimate payback.";
+        return;
+      }
+
+      const months = Math.round(paybackYears * 12);
+      roiResultEl.textContent =
+        `Estimated annual savings: ${fmtUSD(annualSavings)} • Estimated payback: ${paybackYears.toFixed(2)} years (~${months} months)`;
     }
+
+    calcBtn?.addEventListener("click", renderROI);
+    ["input", "change"].forEach((evt) => {
+      annualSpendEl?.addEventListener(evt, renderROI);
+      savingsPctEl?.addEventListener(evt, renderROI);
+      systemCostEl?.addEventListener(evt, renderROI);
+    });
+    renderROI();
+
+    // Prefill the lead form message when user clicks “Email me this estimate”
+    emailEstimateBtn?.addEventListener("click", () => {
+      const msgEl = qs("#msg"); // textarea in your form
+      const { annualSpend, savingsPct, systemCost, annualSavings, paybackYears } = computeROI();
+      if (!msgEl) return;
+
+      const months = isFinite(paybackYears) ? Math.round(paybackYears * 12) : null;
+
+      const line =
+`ROI estimate from site:
+- Annual HVAC spend: ${fmtUSD(annualSpend)}
+- Expected savings: ${savingsPct}%
+- Installed investment: ${fmtUSD(systemCost)}
+- Estimated annual savings: ${fmtUSD(annualSavings)}
+- Estimated payback: ${isFinite(paybackYears) ? paybackYears.toFixed(2) + " years" : "N/A"}${months ? " (~" + months + " months)" : ""}`;
+
+      if (!msgEl.value) msgEl.value = line;
+      else if (!msgEl.value.includes("ROI estimate from site:")) msgEl.value += "\n\n" + line;
+    });
+
+    // ---------- LEAD FORM → HUBSPOT SUBMISSION ----------
+    const form = qs("#leadForm");
+    if (!form) return;
+
+    // Status area (create if missing)
+    let statusEl = qs("#leadStatus");
+    if (!statusEl) {
+      statusEl = document.createElement("div");
+      statusEl.id = "leadStatus";
+      statusEl.style.marginTop = "10px";
+      statusEl.style.fontSize = "14px";
+      statusEl.style.fontWeight = "600";
+      form.appendChild(statusEl);
+    }
+
+    const setStatus = (msg, type = "info") => {
+      statusEl.textContent = msg || "";
+      statusEl.style.color =
+        type === "ok" ? "#2ecc71" :
+        type === "err" ? "#ff6b6b" :
+        "#cbd5e1"; // neutral
+    };
+
+    const getVal = (name) => {
+      const el = qs(`[name="${name}"]`, form);
+      return el ? String(el.value || "").trim() : "";
+    };
+
+    let isSubmitting = false;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (isSubmitting) return;
+
+      // These must match your index.html name="" attributes
+      const firstName = getVal("firstName");
+      const lastName = getVal("lastName");
+      const email = getVal("email");
+
+      if (!firstName || !lastName || !email) {
+        setStatus("Please complete First name, Last name, and Email.", "err");
+        return;
+      }
+
+      // Optional: ensure required selects/inputs are present too
+      const company = getVal("company");
+      const locations = getVal("locations");
+      const rtus = getVal("rtus");
+      const spend = getVal("spend");
+
+      if (!company || !locations || !rtus || !spend) {
+        setStatus("Please complete Company, Number of locations, Avg RTUs, and HVAC spend.", "err");
+        return;
+      }
+
+      isSubmitting = true;
+      setStatus("Submitting…", "info");
+
+      // Your HubSpot identifiers
+      const portalId = "245308395";
+      const formId = "e71670fc-ea6b-4840-a91e-759ff3a2ea30";
+      const endpoint = `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
+
+      // If you want to also include ROI snapshot in the message automatically:
+      const roi = computeROI();
+      const roiLine =
+`ROI snapshot:
+- Estimated annual savings ≈ ${fmtUSD(roi.annualSavings)}
+- Estimated payback ≈ ${isFinite(roi.paybackYears) ? roi.paybackYears.toFixed(2) + " years" : "N/A"}`;
+
+      const message = getVal("msg");
+      const finalMessage = message ? `${message}\n\n${roiLine}` : roiLine;
+
+      const payload = {
+        fields: [
+          { name: "firstname", value: firstName },
+          { name: "lastname", value: lastName },
+          { name: "email", value: email },
+          { name: "phone", value: getVal("phone") },
+          { name: "company", value: company },
+
+          // Custom properties you created in HubSpot
+          { name: "number_of_locations", value: locations },
+          { name: "avg_rtus_per_location", value: rtus },
+          { name: "annual_hvac_spend", value: spend },
+
+          { name: "message", value: finalMessage }
+        ],
+        context: {
+          pageUri: window.location.href,
+          pageName: document.title
+        }
+      };
+
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        console.log("HubSpot response status:", res.status);
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          console.error("HubSpot submission failed:", res.status, text);
+          setStatus("Submitted, but CRM sync failed. Please email us at dan@rtu-x.com.", "err");
+          isSubmitting = false;
+          return;
+        }
+
+        setStatus("✅ Thanks — we received your request. We’ll reach out shortly.", "ok");
+        form.reset();
+      } catch (err) {
+        console.error("HubSpot submission error:", err);
+        setStatus("Connection issue. Please email us at dan@rtu-x.com.", "err");
+      } finally {
+        isSubmitting = false;
+      }
+    });
   });
 })();
