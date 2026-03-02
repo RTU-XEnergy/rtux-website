@@ -7,15 +7,22 @@
   const fmtUSD = (n) => {
     const x = Number(n);
     if (!isFinite(x)) return "$0";
-    return x.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+    return x.toLocaleString(undefined, {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0
+    });
   };
 
   const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
   // Run after DOM ready
   const ready = (fn) => {
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn, { once: true });
-    else fn();
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", fn, { once: true });
+    } else {
+      fn();
+    }
   };
 
   ready(() => {
@@ -29,18 +36,20 @@
 
     function computeROI() {
       const annualSpend = Number(annualSpendEl?.value || 0);
-      const savingsPct = Number(savingsPctEl?.value || 0);
+      const savingsPctRaw = Number(savingsPctEl?.value || 0);
       const systemCost = Number(systemCostEl?.value || 0);
 
-      const pct = clamp(savingsPct, 0, 90) / 100;
+      const savingsPct = clamp(savingsPctRaw, 0, 90);
+      const pct = savingsPct / 100;
       const annualSavings = annualSpend * pct;
       const paybackYears = annualSavings > 0 ? systemCost / annualSavings : Infinity;
 
-      return { annualSpend, savingsPct: clamp(savingsPct, 0, 90), systemCost, annualSavings, paybackYears };
+      return { annualSpend, savingsPct, systemCost, annualSavings, paybackYears };
     }
 
     function renderROI() {
       if (!roiResultEl) return;
+
       const { annualSpend, savingsPct, systemCost, annualSavings, paybackYears } = computeROI();
 
       if (!annualSpend || !systemCost) {
@@ -68,10 +77,10 @@
 
     // Prefill the lead form message when user clicks “Email me this estimate”
     emailEstimateBtn?.addEventListener("click", () => {
-      const msgEl = qs("#msg"); // textarea in your form
-      const { annualSpend, savingsPct, systemCost, annualSavings, paybackYears } = computeROI();
+      const msgEl = qs("#msg"); // textarea in your lead form
       if (!msgEl) return;
 
+      const { annualSpend, savingsPct, systemCost, annualSavings, paybackYears } = computeROI();
       const months = isFinite(paybackYears) ? Math.round(paybackYears * 12) : null;
 
       const line =
@@ -106,7 +115,7 @@
       statusEl.style.color =
         type === "ok" ? "#2ecc71" :
         type === "err" ? "#ff6b6b" :
-        "#cbd5e1"; // neutral
+        "#cbd5e1";
     };
 
     const getVal = (name) => {
@@ -120,21 +129,22 @@
       e.preventDefault();
       if (isSubmitting) return;
 
-      // These must match your index.html name="" attributes
+      // These MUST match your index.html name="" attributes
       const firstName = getVal("firstName");
-      const lastName = getVal("lastName");
-      const email = getVal("email");
+      const lastName  = getVal("lastName");
+      const email     = getVal("email");
 
       if (!firstName || !lastName || !email) {
         setStatus("Please complete First name, Last name, and Email.", "err");
         return;
       }
 
-      // Optional: ensure required selects/inputs are present too
-      const company = getVal("company");
+      const phone     = getVal("phone");
+      const company   = getVal("company");
       const locations = getVal("locations");
-      const rtus = getVal("rtus");
-      const spend = getVal("spend");
+      const rtus      = getVal("rtus");
+      const spend     = getVal("spend");
+      const msg       = getVal("msg");
 
       if (!company || !locations || !rtus || !spend) {
         setStatus("Please complete Company, Number of locations, Avg RTUs, and HVAC spend.", "err");
@@ -144,33 +154,32 @@
       isSubmitting = true;
       setStatus("Submitting…", "info");
 
-      // Your HubSpot identifiers
+      // HubSpot identifiers (these stay the same)
       const portalId = "245308395";
-      const formId = "e71670fc-ea6b-4840-a91e-759ff3a2ea30";
+      const formId   = "e71670fc-ea6b-4840-a91e-759ff3a2ea30";
       const endpoint = `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
 
-      // If you want to also include ROI snapshot in the message automatically:
+      // Add ROI snapshot into message (nice for your email + CRM notes)
       const roi = computeROI();
       const roiLine =
 `ROI snapshot:
 - Estimated annual savings ≈ ${fmtUSD(roi.annualSavings)}
 - Estimated payback ≈ ${isFinite(roi.paybackYears) ? roi.paybackYears.toFixed(2) + " years" : "N/A"}`;
 
-      const message = getVal("msg");
-      const finalMessage = message ? `${message}\n\n${roiLine}` : roiLine;
+      const finalMessage = msg ? `${msg}\n\n${roiLine}` : roiLine;
 
+      // ✅ IMPORTANT: these names must match HubSpot property internal names
       const payload = {
         fields: [
           { name: "firstname", value: firstName },
-          { name: "lastname", value: lastName },
-          { name: "email", value: email },
-          { name: "phone", value: getVal("phone") },
-          { name: "company", value: company },
+          { name: "lastname",  value: lastName },
+          { name: "email",     value: email },
+          { name: "phone",     value: phone },
+          { name: "company",   value: company },
 
-          // Custom properties you created in HubSpot
-          { name: "number_of_locations", value: locations },
-          { name: "avg_rtus_per_location", value: rtus },
-          { name: "annual_hvac_spend", value: spend },
+          { name: "number_of_locations",       value: locations },
+          { name: "avg_rtus_per_location",     value: rtus },
+          { name: "approx_annual_hvac_spend",  value: spend },
 
           { name: "message", value: finalMessage }
         ],
