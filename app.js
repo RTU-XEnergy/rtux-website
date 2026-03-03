@@ -157,7 +157,7 @@
       // HubSpot identifiers (these stay the same)
       const portalId = "245308395";
       const formId   = "e71670fc-ea6b-4840-a91e-759ff3a2ea30";
-      const endpoint = `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
+      const endpoint = "https://rtu-x-lead-capture.personalwealth101.workers.dev/lead";
 
       // Add ROI snapshot into message (nice for your email + CRM notes)
       const roi = computeROI();
