@@ -1,16 +1,20 @@
 (() => {
   "use strict";
 
-  // =========================================================
-  // CONFIG (ONLY EDIT THESE IF NEEDED)
-  // =========================================================
-  // This is your Cloudflare Worker endpoint that emails dan@rtu-x.com
-  const LEAD_WORKER_ENDPOINT = "https://rtu-x-lead-capture.personalwealth101.workers.dev/lead";
-
-  // =========================================================
-  // HELPERS
-  // =========================================================
+  // ----------------------------
+  // Helpers
+  // ----------------------------
   const qs = (sel, root = document) => root.querySelector(sel);
+
+  const ready = (fn) => {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", fn, { once: true });
+    } else {
+      fn();
+    }
+  };
+
+  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
   const fmtUSD = (n) => {
     const x = Number(n);
@@ -22,23 +26,19 @@
     });
   };
 
-  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
-
-  const ready = (fn) => {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", fn, { once: true });
-    } else {
-      fn();
-    }
+  // Safely read cookie value (for HubSpot tracking where possible)
+  const getCookie = (name) => {
+    const m = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+    return m ? decodeURIComponent(m[1]) : "";
   };
 
-  // =========================================================
-  // MAIN
-  // =========================================================
+  // ----------------------------
+  // Main
+  // ----------------------------
   ready(() => {
-    // ---------------------------------------------------------
-    // ROI CALCULATOR
-    // ---------------------------------------------------------
+    // ----------------------------
+    // ROI Calculator
+    // ----------------------------
     const annualSpendEl = qs("#annualSpend");
     const savingsPctEl = qs("#savingsPct");
     const systemCostEl = qs("#systemCost");
@@ -52,9 +52,7 @@
       const systemCost = Number(systemCostEl?.value || 0);
 
       const savingsPct = clamp(savingsPctRaw, 0, 90);
-      const pct = savingsPct / 100;
-
-      const annualSavings = annualSpend * pct;
+      const annualSavings = annualSpend * (savingsPct / 100);
       const paybackYears = annualSavings > 0 ? systemCost / annualSavings : Infinity;
 
       return { annualSpend, savingsPct, systemCost, annualSavings, paybackYears };
@@ -77,9 +75,7 @@
 
       const months = Math.round(paybackYears * 12);
       roiResultEl.textContent =
-        `Estimated annual savings: ${fmtUSD(annualSavings)} • Estimated payback: ${paybackYears.toFixed(
-          2
-        )} years (~${months} months)`;
+        `Estimated annual savings: ${fmtUSD(annualSavings)} • Estimated payback: ${paybackYears.toFixed(2)} years (~${months} months)`;
     }
 
     calcBtn?.addEventListener("click", renderROI);
@@ -90,33 +86,33 @@
     });
     renderROI();
 
-    // Prefill message box with ROI snapshot when user clicks “Email me this estimate”
+    // Prefill lead-form message with ROI snapshot when clicking "Email me this estimate"
     emailEstimateBtn?.addEventListener("click", () => {
-      const msgEl = qs("#msg"); // textarea in the lead form
+      const msgEl = qs("#msg");
       if (!msgEl) return;
 
-      const { annualSpend, savingsPct, systemCost, annualSavings, paybackYears } = computeROI();
-      const months = isFinite(paybackYears) ? Math.round(paybackYears * 12) : null;
+      const roi = computeROI();
+      const months = isFinite(roi.paybackYears) ? Math.round(roi.paybackYears * 12) : null;
 
-      const line =
-`ROI estimate from site:
-- Annual HVAC spend: ${fmtUSD(annualSpend)}
-- Expected savings: ${savingsPct}%
-- Installed investment: ${fmtUSD(systemCost)}
-- Estimated annual savings: ${fmtUSD(annualSavings)}
-- Estimated payback: ${isFinite(paybackYears) ? paybackYears.toFixed(2) + " years" : "N/A"}${months ? " (~" + months + " months)" : ""}`;
+      const roiBlock =
+`ROI snapshot:
+- Annual HVAC spend: ${fmtUSD(roi.annualSpend)}
+- Expected savings: ${roi.savingsPct}%
+- Installed investment: ${fmtUSD(roi.systemCost)}
+- Estimated annual savings ≈ ${fmtUSD(roi.annualSavings)}
+- Estimated payback ≈ ${isFinite(roi.paybackYears) ? roi.paybackYears.toFixed(2) + " years" : "N/A"}${months ? " (~" + months + " months)" : ""}`;
 
-      if (!msgEl.value) msgEl.value = line;
-      else if (!msgEl.value.includes("ROI estimate from site:")) msgEl.value += "\n\n" + line;
+      if (!msgEl.value) msgEl.value = roiBlock;
+      else if (!msgEl.value.includes("ROI snapshot:")) msgEl.value += "\n\n" + roiBlock;
     });
 
-    // ---------------------------------------------------------
-    // LEAD FORM → EMAIL (VIA CLOUDFLARE WORKER)
-    // ---------------------------------------------------------
+    // ----------------------------
+    // Lead Form -> Worker -> Email (and/or HubSpot if Worker does it)
+    // ----------------------------
     const form = qs("#leadForm");
     if (!form) return;
 
-    // Status area (create if missing)
+    // Status element
     let statusEl = qs("#leadStatus");
     if (!statusEl) {
       statusEl = document.createElement("div");
@@ -146,74 +142,115 @@
       e.preventDefault();
       if (isSubmitting) return;
 
-      // MUST match index.html name="" attributes
+      // These must match index.html name="" attributes
       const firstName = getVal("firstName");
-      const lastName = getVal("lastName");
-      const email = getVal("email");
-      const phone = getVal("phone");
-      const company = getVal("company");
-      const locations = getVal("locations");
-      const rtus = getVal("rtus");
-      const spend = getVal("spend");
-      const msg = getVal("msg");
+      const lastName  = getVal("lastName");
+      const email     = getVal("email");
 
-      // Required validation (keep this strict)
+      // Required in your UI
+      const company   = getVal("company");
+      const locations = getVal("locations");
+      const rtus      = getVal("rtus");
+      const spend     = getVal("spend");
+
       if (!firstName || !lastName || !email) {
         setStatus("Please complete First name, Last name, and Email.", "err");
         return;
       }
+
       if (!company || !locations || !rtus || !spend) {
         setStatus("Please complete Company, Number of locations, Avg RTUs, and HVAC spend.", "err");
         return;
       }
 
-      isSubmitting = true;
-      setStatus("Submitting…", "info");
+      const phone = getVal("phone");
+      const msg   = getVal("msg");
 
-      // ROI snapshot appended to message
+      // Add ROI snapshot to message without overwriting the user's note
       const roi = computeROI();
       const roiLine =
 `ROI snapshot:
 - Estimated annual savings ≈ ${fmtUSD(roi.annualSavings)}
 - Estimated payback ≈ ${isFinite(roi.paybackYears) ? roi.paybackYears.toFixed(2) + " years" : "N/A"}`;
 
-      const finalMessage = msg ? `${msg}\n\n${roiLine}` : roiLine;
+      const finalMessage = msg
+        ? (msg.includes("ROI snapshot:") ? msg : `${msg}\n\n${roiLine}`)
+        : roiLine;
 
-      // IMPORTANT: This payload is for YOUR WORKER (simple JSON)
+      isSubmitting = true;
+      setStatus("Submitting…", "info");
+
+      // ✅ IMPORTANT: Worker route must be /submit (your Worker error said this explicitly)
+      const endpoint = "https://rtu-x-lead-capture.personalwealth101.workers.dev/submit";
+
+      // Payload: includes BOTH your user-friendly fields + HubSpot internal names (if Worker uses them)
       const payload = {
+        // Human readable (useful if Worker only emails)
         firstName,
         lastName,
         email,
         phone,
         company,
-        locations,
-        rtus,
-        spend,
+        numberOfLocations: locations,
+        avgRtusPerLocation: rtus,
+        approxAnnualHvacSpend: spend,
         message: finalMessage,
         pageUri: window.location.href,
-        pageName: document.title
+        pageName: document.title,
+
+        // HubSpot-friendly block (if Worker forwards to HubSpot)
+        hubspot: {
+          fields: [
+            { name: "firstname", value: firstName },
+            { name: "lastname", value: lastName },
+            { name: "email", value: email },
+            { name: "phone", value: phone },
+            { name: "company", value: company },
+            { name: "number_of_locations", value: locations },
+            { name: "avg_rtus_per_location", value: rtus },
+            { name: "approx_annual_hvac_spend", value: spend },
+            { name: "message", value: finalMessage }
+          ],
+          context: {
+            pageUri: window.location.href,
+            pageName: document.title,
+            hutk: getCookie("hubspotutk") || undefined
+          }
+        }
       };
 
       try {
-        const res = await fetch(LEAD_WORKER_ENDPOINT, {
+        const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
 
-        console.log("Lead worker response status:", res.status);
+        console.log("Lead submit response status:", res.status);
+
+        const text = await res.text().catch(() => "");
+        let json = null;
+        try { json = text ? JSON.parse(text) : null; } catch (_) {}
 
         if (!res.ok) {
-          const text = await res.text().catch(() => "");
-          console.error("Lead worker failed:", res.status, text);
-          setStatus("Connection issue. Please email us at dan@rtu-x.com.", "err");
+          console.error("Lead submit failed:", res.status, json || text);
+          setStatus("Submitted, but delivery failed. Please email us at dan@rtu-x.com.", "err");
+          isSubmitting = false;
+          return;
+        }
+
+        // If your Worker returns JSON with ok:true, great—if not, still treat 200 as success.
+        if (json && json.ok === false) {
+          console.error("Worker reported failure:", json);
+          setStatus("Submitted, but delivery failed. Please email us at dan@rtu-x.com.", "err");
+          isSubmitting = false;
           return;
         }
 
         setStatus("✅ Thanks — we received your request. We’ll reach out shortly.", "ok");
         form.reset();
       } catch (err) {
-        console.error("Lead worker error:", err);
+        console.error("Lead submit error:", err);
         setStatus("Connection issue. Please email us at dan@rtu-x.com.", "err");
       } finally {
         isSubmitting = false;
