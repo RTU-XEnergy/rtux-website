@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thank you | RTU-X Energy, LLC</title>
+  <meta name="description" content="Thanks for requesting a savings estimate from RTU-X Energy, LLC." />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;650;750;850&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="/" aria-label="RTU-X Energy home">
+        <img class="brand-logo" src="assets/rtux-logo.png" alt="RTU-X Optimization Module logo" />
+      </a>
+
+      <nav class="navlinks" aria-label="Primary">
+        <a href="/#how">How it works</a>
+        <a href="/#roi">ROI</a>
+        <a href="/#warranty">Warranty-safe</a>
+        <a href="/#pilot">Pilot</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+
+      <a class="btn primary" href="/#contact">Request a savings estimate</a>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding-top: 28px;">
+    <section class="section reveal">
+      <div class="split">
+        <div class="card panel">
+          <div class="panel-top">
+            <div>
+              <div class="kicker">Request received</div>
+              <h2 style="margin: 6px 0 6px;">Thank you — we’ve got it.</h2>
+              <div class="muted">
+                A member of RTU-X Energy, LLC will review your details and follow up shortly.
+              </div>
+            </div>
+            <div class="badge" aria-hidden="true">✅</div>
+          </div>
+
+          <div class="callout" style="margin-top: 14px;">
+            <div class="callout-k">What happens next</div>
+            <div class="callout-d">
+              We’ll confirm basic site details and propose a disciplined pilot plan (baseline → install → verify → scale).
+            </div>
+          </div>
+
+          <div class="cta" style="margin-top: 16px;">
+            <a class="btn primary" href="/#roi">Run another ROI estimate</a>
+            <a class="btn" href="/#contact">Submit another request</a>
+          </div>
+
+          <div class="fine" style="margin-top: 12px;">
+            If you need immediate help, email <b>dan@rtu-x.com</b>.
+          </div>
+        </div>
+
+        <div class="card panel">
+          <div class="panel-top">
+            <div>
+              <div class="kicker">RTU-X Energy, LLC</div>
+              <div class="muted">Designed to optimize—<b>not alter</b>—factory rooftop equipment.</div>
+            </div>
+            <div class="badge blue" aria-hidden="true">⚙️</div>
+          </div>
+
+          <ul class="bullets">
+            <li>Non-invasive 24V intercept architecture</li>
+            <li>Fail-safe OEM default on loss of power</li>
+            <li>CT-based monitoring to support proof of savings</li>
+          </ul>
+
+          <div class="pill small" style="margin-top: 12px;">
+            You’re in the right place: <b>pilot-first rollout</b> for clean proof, then scale.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="foot">
+        <div>
+          <div class="foot-brand">RTU-X Energy, LLC</div>
+          <div class="muted">RTU-X Optimization Module — Plug-and-play rooftop HVAC optimization for franchise locations.</div>
+          <div class="pill small">© <span id="year"></span> RTU-X Energy, LLC • All rights reserved</div>
+        </div>
+        <div class="foot-links">
+          <a href="/#top">Top</a>
+          <a href="/#how">How it works</a>
+          <a href="/#roi">ROI</a>
+          <a href="/#contact">Contact</a>
+        </div>
+      </div>
+      <div class="fine" style="margin-top:10px">
+        Disclaimer: this site provides illustrative estimates and does not guarantee savings. Actual results vary by site conditions and operating parameters.
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Set year in footer (same behavior as your main site)
+    (function(){ 
+      var y = document.getElementById("year"); 
+      if (y) y.textContent = String(new Date().getFullYear()); 
+    })();
+  </script>
+</body>
+</html>
