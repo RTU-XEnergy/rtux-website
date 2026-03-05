@@ -135,7 +135,7 @@
 
     let isSubmitting = false;
 
-    form.addEventListener("submit", async (e) => {
+    // form.addEventListener("submit", async (e) => {
       e.preventDefault();
       if (isSubmitting) return;
 
@@ -188,7 +188,7 @@
         const res = await fetch(WORKER_SUBMIT_URL, {
           method: "POST",
           body: fd
-        });
+        // });
 
         console.log("Lead submit status:", res.status);
 
