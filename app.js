@@ -81,6 +81,21 @@
       systemCostEl?.addEventListener(evt, renderROI);
     });
     renderROI();
+    // --- Push ROI results into hidden form fields for Formspree email ---
+function pushRoiIntoLeadForm() {
+  const savingsField = qs("#roi_est_annual_savings");
+  const yearsField = qs("#roi_est_payback_years");
+  const monthsField = qs("#roi_est_payback_months");
+
+  if (!savingsField || !yearsField || !monthsField) return;
+
+  const { annualSavings, paybackYears } = computeROI();
+  const paybackMonths = isFinite(paybackYears) ? Math.round(paybackYears * 12) : "";
+
+  savingsField.value = isFinite(annualSavings) ? Math.round(annualSavings).toString() : "";
+  yearsField.value = isFinite(paybackYears) ? paybackYears.toFixed(2) : "";
+  monthsField.value = paybackMonths !== "" ? paybackMonths.toString() : "";
+}
 
     // Prefill lead form message with ROI snapshot (optional but helpful)
     emailEstimateBtn?.addEventListener("click", () => {
@@ -136,6 +151,7 @@
     let isSubmitting = false;
 
     // form.addEventListener("submit", async (e) => {
+    pushRoiIntoLeadForm();
       e.preventDefault();
       if (isSubmitting) return;
 
