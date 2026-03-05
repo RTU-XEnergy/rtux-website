@@ -201,10 +201,10 @@ function pushRoiIntoLeadForm() {
       fd.append("timestamp", new Date().toISOString());
 
       try {
-        const res = await fetch(WORKER_SUBMIT_URL, {
-          method: "POST",
-          body: fd
-        // });
+       const res = await fetch(WORKER_SUBMIT_URL, {
+  method: "POST",
+  body: fd
+});
 
         console.log("Lead submit status:", res.status);
 
