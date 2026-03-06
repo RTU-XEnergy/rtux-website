@@ -167,43 +167,37 @@
         </div>
 
         <div class="card panel">
-        <form id="roiForm" class="calc" autocomplete="on">
-  <label for="annualSpend">Annual HVAC electricity spend (per location)</label>
-  <input id="annualSpend" name="annualSpend" type="number" min="0" step="100" value="6500" />
+          <form id="roiForm" class="calc" autocomplete="on">
+            <label for="annualSpend">Annual HVAC electricity spend (per location)</label>
+            <input id="annualSpend" name="annualSpend" type="number" min="0" step="100" value="6500" />
 
-  <label for="savingsPct">Expected HVAC savings (%)</label>
-  <input id="savingsPct" name="savingsPct" type="number" min="0" max="60" step="1" value="18" />
+            <label for="savingsPct">Expected HVAC savings (%)</label>
+            <input id="savingsPct" name="savingsPct" type="number" min="0" max="60" step="1" value="18" />
 
-  <label for="systemCost">Estimated RTU-X installed cost (per location)</label>
-  <input id="systemCost" name="systemCost" type="number" min="0" step="100" value="3995" />
-  <div class="fine">
-    Default estimate shown. Final installed pricing will be confirmed after site intake and pilot evaluation.
-  </div>
+            <label for="systemCost">Estimated RTU-X installed cost (per location)</label>
+            <input id="systemCost" name="systemCost" type="number" min="0" step="100" value="3995" />
+            <div class="fine">
+              Default estimate shown. Final installed pricing will be confirmed after site intake and pilot evaluation.
+            </div>
 
-  <label for="roiLocations">Number of locations (for portfolio estimate)</label>
-  <input id="roiLocations" name="roiLocations" type="number" min="1" step="1" value="10" />
-  <div class="fine">
-    Portfolio estimate multiplies annual savings by your location count. Payback remains per-location.
-  </div>
+            <label for="roiLocations">Number of locations (for portfolio estimate)</label>
+            <input id="roiLocations" name="roiLocations" type="number" min="1" step="1" value="10" />
+            <div class="fine">
+              Portfolio estimate multiplies annual savings by your location count. Payback remains per-location.
+            </div>
 
-  <div class="result" id="roiResult" aria-live="polite">Enter values to estimate payback.</div>
-          
-  <div class="result" id="roiProfit5yr" aria-live="polite"></div>
-<div class="result" id="roiProfit10yr" aria-live="polite"></div>
+            <div class="result" id="roiResult" aria-live="polite">Enter values to estimate payback.</div>
+            <div class="result" id="roiPortfolio" aria-live="polite"></div>
 
-<div class="result" id="roiPortfolio" aria-live="polite"></div>
-<div class="result" id="roiPortfolio5yr" aria-live="polite"></div>
-<div class="result" id="roiPortfolio10yr" aria-live="polite"></div>
+            <div class="cta-row">
+              <button class="btn primary" type="button" id="calcBtn">Calculate</button>
+              <a class="btn" href="#contact">Request estimate</a>
+            </div>
 
-  <div class="cta-row">
-    <button class="btn primary" type="button" id="calcBtn">Calculate</button>
-    <a class="btn" href="#contact">Request estimate</a>
-  </div>
-
-  <div class="fine">
-    Disclaimer: estimates are illustrative and not guarantees. Actual results vary by runtime, unit condition, controls, weather, and site factors.
-  </div>
-</form>
+            <div class="fine">
+              Disclaimer: estimates are illustrative and not guarantees. Actual results vary by runtime, unit condition, controls, weather, and site factors.
+            </div>
+          </form>
         </div>
       </div>
     </section>
@@ -302,93 +296,94 @@
             <div class="badge" aria-hidden="true">✉️</div>
           </div>
 
-          <!-- ORIGINAL CLEAN FORM (mailto to dan@rtu-x.com) -->
-    <!-- RTU-X Lead Form (Formspree → dan@rtu-x.com) -->
-<form id="leadForm" class="leadform" action="https://formspree.io/f/xreyzbor" method="POST" autocomplete="on">
-  <input type="hidden" name="_next" value="https://rtu-x.com/thank-you.html">
-   <!-- Hidden ROI fields (sent with Formspree email) -->
- <input type="hidden" id="roi_est_annual_savings" name="roi_est_annual_savings" value="">
-<input type="hidden" id="roi_est_payback_years" name="roi_est_payback_years" value="">
-<input type="hidden" id="roi_est_payback_months" name="roi_est_payback_months" value="">
-<input type="hidden" id="roi_est_portfolio_locations" name="roi_est_portfolio_locations" value="">
-<input type="hidden" id="roi_est_portfolio_savings" name="roi_est_portfolio_savings" value="">
-  <div class="row2">
-    <div>
-      <label for="fname">First name</label>
-      <input id="fname" name="firstName" type="text" autocomplete="given-name" required />
-    </div>
-    <div>
-      <label for="lname">Last name</label>
-      <input id="lname" name="lastName" type="text" autocomplete="family-name" required />
-    </div>
-  </div>
+          <form id="leadForm" class="leadform" action="https://formspree.io/f/xreyzbor" method="POST" autocomplete="on">
+            <input type="hidden" name="_next" value="https://rtu-x.com/thank-you.html">
 
-  <div class="row2">
-    <div>
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email" autocomplete="email" required />
-    </div>
-    <div>
-      <label for="phone">Phone (optional)</label>
-      <input id="phone" name="phone" type="tel" autocomplete="tel" />
-    </div>
-  </div>
+            <input type="hidden" id="roi_est_annual_savings" name="roi_est_annual_savings" value="">
+            <input type="hidden" id="roi_est_payback_years" name="roi_est_payback_years" value="">
+            <input type="hidden" id="roi_est_payback_months" name="roi_est_payback_months" value="">
+            <input type="hidden" id="roi_est_portfolio_locations" name="roi_est_portfolio_locations" value="">
+            <input type="hidden" id="roi_est_portfolio_savings" name="roi_est_portfolio_savings" value="">
+            <input type="hidden" id="roi_est_profit_5yr" name="roi_est_profit_5yr" value="">
+            <input type="hidden" id="roi_est_profit_10yr" name="roi_est_profit_10yr" value="">
+            <input type="hidden" id="roi_est_portfolio_profit_5yr" name="roi_est_portfolio_profit_5yr" value="">
+            <input type="hidden" id="roi_est_portfolio_profit_10yr" name="roi_est_portfolio_profit_10yr" value="">
 
-  <div class="row2">
-    <div>
-      <label for="company">Company</label>
-      <input id="company" name="company" type="text" autocomplete="organization" required />
-    </div>
-    <div>
-      <label for="locations">Number of locations</label>
-      <select id="locations" name="locations" required>
-        <option value="" selected disabled>Select…</option>
-        <option>1</option>
-        <option>2–4</option>
-        <option>5–10</option>
-        <option>11–25</option>
-        <option>25+</option>
-      </select>
-    </div>
-  </div>
+            <div class="row2">
+              <div>
+                <label for="fname">First name</label>
+                <input id="fname" name="firstName" type="text" autocomplete="given-name" required />
+              </div>
+              <div>
+                <label for="lname">Last name</label>
+                <input id="lname" name="lastName" type="text" autocomplete="family-name" required />
+              </div>
+            </div>
 
-  <div class="row2">
-    <div>
-      <label for="rtus">Avg RTUs per location</label>
-      <select id="rtus" name="rtus" required>
-        <option value="" selected disabled>Select…</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3+</option>
-      </select>
-    </div>
-    <div>
-      <label for="spend">Approx annual HVAC spend ($)</label>
-      <input id="spend" name="spend" type="number" min="0" step="100" placeholder="6500" required />
-    </div>
-  </div>
+            <div class="row2">
+              <div>
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div>
+                <label for="phone">Phone (optional)</label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" />
+              </div>
+            </div>
 
-  <label for="msg">Message (optional)</label>
-  <textarea id="msg" name="message" rows="4" placeholder="Anything we should know (markets, demand charges, timeline)"></textarea>
+            <div class="row2">
+              <div>
+                <label for="company">Company</label>
+                <input id="company" name="company" type="text" autocomplete="organization" required />
+              </div>
+              <div>
+                <label for="locations">Number of locations</label>
+                <select id="locations" name="locations" required>
+                  <option value="" selected disabled>Select…</option>
+                  <option>1</option>
+                  <option>2–4</option>
+                  <option>5–10</option>
+                  <option>11–25</option>
+                  <option>25+</option>
+                </select>
+              </div>
+            </div>
 
-  <!-- Hidden context (helps the email be more useful) -->
-  <input type="hidden" name="source" value="rtu-x.com savings estimate form" />
-  <input type="hidden" name="page" id="lead_page" value="" />
+            <div class="row2">
+              <div>
+                <label for="rtus">Avg RTUs per location</label>
+                <select id="rtus" name="rtus" required>
+                  <option value="" selected disabled>Select…</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3+</option>
+                </select>
+              </div>
+              <div>
+                <label for="spend">Approx annual HVAC spend ($)</label>
+                <input id="spend" name="spend" type="number" min="0" step="100" placeholder="6500" required />
+              </div>
+            </div>
 
-  <button class="btn primary" type="submit">Submit request</button>
+            <label for="msg">Message (optional)</label>
+            <textarea id="msg" name="message" rows="4" placeholder="Anything we should know (markets, demand charges, timeline)"></textarea>
 
-  <div class="fine">
-    By submitting, you agree we may contact you to discuss a pilot. We never sell your data.
-  </div>
-</form>
+            <input type="hidden" name="source" value="rtu-x.com savings estimate form" />
+            <input type="hidden" name="page" id="lead_page" value="" />
 
-<script>
-  // Fill hidden page URL field
-  (function () {
-    var el = document.getElementById("lead_page");
-    if (el) el.value = window.location.href;
-  })();
-</script>
+            <button class="btn primary" type="submit">Submit request</button>
+
+            <div class="fine">
+              By submitting, you agree we may contact you to discuss a pilot. We never sell your data.
+            </div>
+          </form>
+
+          <script>
+            (function () {
+              var el = document.getElementById("lead_page");
+              if (el) el.value = window.location.href;
+            })();
+          </script>
         </div>
 
         <div class="card panel">
