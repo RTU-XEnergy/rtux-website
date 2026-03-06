@@ -312,3 +312,42 @@
     });
   });
 })();
+.diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.node {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-weight: 650;
+  color: #e8edf7;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.node.highlight {
+  background: linear-gradient(180deg, rgba(46,124,255,0.22), rgba(46,124,255,0.10));
+  border: 1px solid rgba(46,124,255,0.45);
+}
+
+.arrow {
+  font-size: 22px;
+  line-height: 1;
+  color: rgba(255,255,255,0.6);
+}
+
+@media (max-width: 640px) {
+  .node {
+    max-width: 100%;
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+}
