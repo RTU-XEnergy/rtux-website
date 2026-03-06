@@ -1,247 +1,254 @@
 (() => {
-  "use strict";
+"use strict";
 
-  // ---------- Helpers ----------
-  const qs = (sel, root = document) => root.querySelector(sel);
+/* -----------------------------
+   Helpers
+----------------------------- */
 
-  const fmtUSD = (n) => {
-    const x = Number(n);
-    if (!isFinite(x)) return "$0";
-    return x.toLocaleString(undefined, {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0
-    });
-  };
+const qs = (sel, root = document) => root.querySelector(sel);
 
-  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+const fmtUSD = (n) => {
+const x = Number(n);
+if (!isFinite(x)) return "$0";
+return x.toLocaleString(undefined, {
+style: "currency",
+currency: "USD",
+maximumFractionDigits: 0
+});
+};
 
-  const ready = (fn) => {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", fn, { once: true });
-    } else {
-      fn();
-    }
-  };
+const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
-  ready(() => {
-    // ============================================================
-    // ROI CALCULATOR
-    // ============================================================
-    const annualSpendEl = qs("#annualSpend");
-    const savingsPctEl = qs("#savingsPct");
-    const systemCostEl = qs("#systemCost");
-    const roiLocationsEl = qs("#roiLocations");
-    const roiResultEl = qs("#roiResult");
-    const roiPortfolioEl = qs("#roiPortfolio");
-    const calcBtn = qs("#calcBtn");
-    const emailEstimateBtn = qs("#emailEstimateBtn");
+const ready = (fn) => {
+if (document.readyState === "loading") {
+document.addEventListener("DOMContentLoaded", fn, { once: true });
+} else {
+fn();
+}
+};
 
-    function computeROI() {
-      const annualSpend = Number(annualSpendEl?.value || 0);
-      const savingsPctRaw = Number(savingsPctEl?.value || 0);
-      const systemCost = Number(systemCostEl?.value || 0);
-      const locationCount = Number(roiLocationsEl?.value || 0);
+/* -----------------------------
+   Main App
+----------------------------- */
 
-      const savingsPct = clamp(savingsPctRaw, 0, 90);
-      const pct = savingsPct / 100;
-      const annualSavings = annualSpend * pct;
-      const paybackYears = annualSavings > 0 ? systemCost / annualSavings : Infinity;
-      const portfolioAnnualSavings = annualSavings * locationCount;
+ready(() => {
 
-      return {
-        annualSpend,
-        savingsPct,
-        systemCost,
-        annualSavings,
-        paybackYears,
-        locationCount,
-        portfolioAnnualSavings
-      };
-    }
+/* -----------------------------
+   ROI Calculator Elements
+----------------------------- */
 
-  function pushRoiIntoLeadForm() {
-  const savingsField = qs("#roi_est_annual_savings");
-  const yearsField = qs("#roi_est_payback_years");
-  const monthsField = qs("#roi_est_payback_months");
-  const portfolioLocationsField = qs("#roi_est_portfolio_locations");
-  const portfolioSavingsField = qs("#roi_est_portfolio_savings");
+const annualSpendEl = qs("#annualSpend");
+const savingsPctEl = qs("#savingsPct");
+const systemCostEl = qs("#systemCost");
+const locationCountEl = qs("#roiLocations");
 
-  if (!savingsField || !yearsField || !monthsField) return;
+const roiResultEl = qs("#roiResult");
+const roiProfit5yrEl = qs("#roiProfit5yr");
+const roiProfit10yrEl = qs("#roiProfit10yr");
+const roiPortfolioEl = qs("#roiPortfolio");
+const roiPortfolio5yrEl = qs("#roiPortfolio5yr");
+const roiPortfolio10yrEl = qs("#roiPortfolio10yr");
 
-  const { annualSavings, paybackYears, locationCount, portfolioAnnualSavings } = computeROI();
+const calcBtn = qs("#calcBtn");
 
-  const paybackMonths = isFinite(paybackYears) ? Math.round(paybackYears * 12) : "";
+/* -----------------------------
+   ROI Calculation
+----------------------------- */
 
-  savingsField.value = isFinite(annualSavings) ? Math.round(annualSavings).toString() : "";
-  yearsField.value = isFinite(paybackYears) ? paybackYears.toFixed(2) : "";
-  monthsField.value = paybackMonths !== "" ? paybackMonths.toString() : "";
+function computeROI() {
 
-  if (portfolioLocationsField) {
-    portfolioLocationsField.value = locationCount ? locationCount.toString() : "";
-  }
+const annualSpend = Number(annualSpendEl?.value || 0);
+const savingsPctRaw = Number(savingsPctEl?.value || 0);
+const systemCost = Number(systemCostEl?.value || 0);
+const locationCount = Number(locationCountEl?.value || 0);
 
-  if (portfolioSavingsField) {
-    portfolioSavingsField.value = isFinite(portfolioAnnualSavings)
-      ? Math.round(portfolioAnnualSavings).toString()
-      : "";
-  }
+const savingsPct = clamp(savingsPctRaw, 0, 90);
+
+const annualSavings = annualSpend * (savingsPct / 100);
+
+const paybackYears = annualSavings > 0
+? systemCost / annualSavings
+: Infinity;
+
+const portfolioAnnualSavings = annualSavings * locationCount;
+
+return {
+annualSpend,
+systemCost,
+annualSavings,
+paybackYears,
+locationCount,
+portfolioAnnualSavings
+};
+
 }
 
-    function renderROI() {
-      if (!roiResultEl) return;
+/* -----------------------------
+   Render ROI
+----------------------------- */
 
-      const {
-        annualSpend,
-        systemCost,
-        annualSavings,
-        paybackYears,
-        locationCount,
-        portfolioAnnualSavings
-      } = computeROI();
+function renderROI() {
 
-      if (!annualSpend || !systemCost) {
-        roiResultEl.textContent = "Enter values to estimate payback.";
-        if (roiPortfolioEl) roiPortfolioEl.textContent = "";
-        pushRoiIntoLeadForm();
-        return;
-      }
+if (!roiResultEl) return;
 
-      if (!isFinite(paybackYears)) {
-        roiResultEl.textContent = "Savings must be greater than $0 to estimate payback.";
-        if (roiPortfolioEl) roiPortfolioEl.textContent = "";
-        pushRoiIntoLeadForm();
-        return;
-      }
+const {
+annualSpend,
+systemCost,
+annualSavings,
+paybackYears,
+locationCount,
+portfolioAnnualSavings
+} = computeROI();
 
-      const months = Math.round(paybackYears * 12);
+if (!annualSpend || !systemCost) {
 
-      roiResultEl.textContent =
-        `Estimated annual savings per location: ${fmtUSD(annualSavings)} • Estimated payback: ${paybackYears.toFixed(2)} years (~${months} months)`;
+roiResultEl.textContent =
+"Enter values to estimate payback.";
 
-      if (roiPortfolioEl) {
-        if (locationCount > 0) {
-          roiPortfolioEl.textContent =
-            `Estimated annual savings across ${locationCount} locations: ${fmtUSD(portfolioAnnualSavings)}`;
-        } else {
-          roiPortfolioEl.textContent = "Enter number of locations to estimate portfolio-wide annual savings.";
-        }
-      }
+roiProfit5yrEl.textContent = "";
+roiProfit10yrEl.textContent = "";
+roiPortfolioEl.textContent = "";
+roiPortfolio5yrEl.textContent = "";
+roiPortfolio10yrEl.textContent = "";
 
-      pushRoiIntoLeadForm();
-    }
+pushRoiIntoLeadForm();
 
-    calcBtn?.addEventListener("click", (e) => {
-      e.preventDefault();
-      renderROI();
-    });
+return;
 
-    ["input", "change"].forEach((evt) => {
-      annualSpendEl?.addEventListener(evt, renderROI);
-      savingsPctEl?.addEventListener(evt, renderROI);
-      systemCostEl?.addEventListener(evt, renderROI);
-      roiLocationsEl?.addEventListener(evt, renderROI);
-    });
+}
 
-    renderROI();
+if (!isFinite(paybackYears)) {
 
-    // Prefill lead form message with ROI snapshot when clicking “Email me this estimate”
-    emailEstimateBtn?.addEventListener("click", () => {
-      const msgEl = qs("#msg");
-      if (!msgEl) return;
+roiResultEl.textContent =
+"Savings must be greater than $0 to estimate payback.";
 
-      const {
-        annualSpend,
-        savingsPct,
-        systemCost,
-        annualSavings,
-        paybackYears,
-        locationCount,
-        portfolioAnnualSavings
-      } = computeROI();
+pushRoiIntoLeadForm();
 
-      const months = isFinite(paybackYears) ? Math.round(paybackYears * 12) : null;
+return;
 
-      const line =
-`ROI estimate from site:
-- Annual HVAC spend (per location): ${fmtUSD(annualSpend)}
-- Expected savings: ${savingsPct}%
-- Estimated RTU-X installed cost (per location): ${fmtUSD(systemCost)}
-- Estimated annual savings (per location): ${fmtUSD(annualSavings)}
-- Estimated payback: ${isFinite(paybackYears) ? paybackYears.toFixed(2) + " years" : "N/A"}${months ? " (~" + months + " months)" : ""}
-- Number of locations: ${locationCount || 0}
-- Estimated annual savings across portfolio: ${fmtUSD(portfolioAnnualSavings)}`;
+}
 
-      if (!msgEl.value) msgEl.value = line;
-      else if (!msgEl.value.includes("ROI estimate from site:")) msgEl.value += "\n\n" + line;
-    });
+const months = Math.round(paybackYears * 12);
 
-    // ============================================================
-    // LEAD FORM → FORMSPREE
-    // ============================================================
-    const leadForm = qs("#leadForm");
-    if (!leadForm) return;
+const profit5yr = (annualSavings * 5) - systemCost;
+const profit10yr = (annualSavings * 10) - systemCost;
 
-    let statusEl = qs("#leadStatus");
-    if (!statusEl) {
-      statusEl = document.createElement("div");
-      statusEl.id = "leadStatus";
-      statusEl.style.marginTop = "10px";
-      statusEl.style.fontSize = "14px";
-      statusEl.style.fontWeight = "650";
-      leadForm.appendChild(statusEl);
-    }
+const portfolioProfit5yr =
+(portfolioAnnualSavings * 5) - (systemCost * locationCount);
 
-    const setStatus = (msg, type = "info") => {
-      statusEl.textContent = msg || "";
-      statusEl.style.color =
-        type === "ok" ? "#2ecc71" :
-        type === "err" ? "#ff6b6b" :
-        "#cbd5e1";
-    };
+const portfolioProfit10yr =
+(portfolioAnnualSavings * 10) - (systemCost * locationCount);
 
-    leadForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+/* Display results */
 
-      pushRoiIntoLeadForm();
+roiResultEl.textContent =
+`Estimated annual savings per location: ${fmtUSD(annualSavings)} • Estimated payback: ${paybackYears.toFixed(2)} years (~${months} months)`;
 
-      const action = leadForm.getAttribute("action");
-      const nextUrl = "https://rtu-x.com/thank-you.html";
+roiProfit5yrEl.textContent =
+`Estimated 5-year profit after investment (per location): ${fmtUSD(profit5yr)}`;
 
-      if (!action) {
-        setStatus("Form action is missing.", "err");
-        return;
-      }
+roiProfit10yrEl.textContent =
+`Estimated 10-year profit after investment (per location): ${fmtUSD(profit10yr)}`;
 
-      const submitBtn = leadForm.querySelector('button[type="submit"]');
-      if (submitBtn) submitBtn.disabled = true;
+if (locationCount > 0) {
 
-      setStatus("Submitting…", "info");
+roiPortfolioEl.textContent =
+`Estimated annual savings across ${locationCount} locations: ${fmtUSD(portfolioAnnualSavings)}`;
 
-      try {
-        const fd = new FormData(leadForm);
+roiPortfolio5yrEl.textContent =
+`Estimated 5-year portfolio profit after investment: ${fmtUSD(portfolioProfit5yr)}`;
 
-        const res = await fetch(action, {
-          method: "POST",
-          body: fd,
-          headers: { "Accept": "application/json" }
-        });
+roiPortfolio10yrEl.textContent =
+`Estimated 10-year portfolio profit after investment: ${fmtUSD(portfolioProfit10yr)}`;
 
-        if (!res.ok) {
-          const text = await res.text().catch(() => "");
-          console.error("Formspree failed:", res.status, text);
-          setStatus("Submitted, but delivery failed. Please email us at dan@rtu-x.com.", "err");
-          if (submitBtn) submitBtn.disabled = false;
-          return;
-        }
+} else {
 
-        setStatus("✅ Thanks — we received your request. Redirecting…", "ok");
-        window.location.href = nextUrl;
-      } catch (err) {
-        console.error("Form submit error:", err);
-        setStatus("Connection issue. Please email us at dan@rtu-x.com.", "err");
-        if (submitBtn) submitBtn.disabled = false;
-      }
-    });
-  });
+roiPortfolioEl.textContent =
+"Enter number of locations to estimate portfolio savings.";
+
+}
+
+/* sync ROI into hidden fields */
+
+pushRoiIntoLeadForm();
+
+}
+
+/* -----------------------------
+   Hidden Form Fields
+----------------------------- */
+
+function pushRoiIntoLeadForm() {
+
+const savingsField = qs("#roi_est_annual_savings");
+const yearsField = qs("#roi_est_payback_years");
+const monthsField = qs("#roi_est_payback_months");
+const portfolioLocationsField = qs("#roi_est_portfolio_locations");
+const portfolioSavingsField = qs("#roi_est_portfolio_savings");
+
+if (!savingsField || !yearsField || !monthsField) return;
+
+const {
+annualSavings,
+paybackYears,
+locationCount,
+portfolioAnnualSavings
+} = computeROI();
+
+const paybackMonths = isFinite(paybackYears)
+? Math.round(paybackYears * 12)
+: "";
+
+savingsField.value =
+isFinite(annualSavings)
+? Math.round(annualSavings).toString()
+: "";
+
+yearsField.value =
+isFinite(paybackYears)
+? paybackYears.toFixed(2)
+: "";
+
+monthsField.value =
+paybackMonths !== ""
+? paybackMonths.toString()
+: "";
+
+if (portfolioLocationsField) {
+portfolioLocationsField.value =
+locationCount
+? locationCount.toString()
+: "";
+}
+
+if (portfolioSavingsField) {
+portfolioSavingsField.value =
+isFinite(portfolioAnnualSavings)
+? Math.round(portfolioAnnualSavings).toString()
+: "";
+}
+
+}
+
+/* -----------------------------
+   Events
+----------------------------- */
+
+calcBtn?.addEventListener("click", renderROI);
+
+["input", "change"].forEach((evt) => {
+
+annualSpendEl?.addEventListener(evt, renderROI);
+savingsPctEl?.addEventListener(evt, renderROI);
+systemCostEl?.addEventListener(evt, renderROI);
+locationCountEl?.addEventListener(evt, renderROI);
+
+});
+
+/* initial render */
+
+renderROI();
+
+});
+
 })();
