@@ -60,20 +60,33 @@
       };
     }
 
-    function pushRoiIntoLeadForm() {
-      const savingsField = qs("#roi_est_annual_savings");
-      const yearsField = qs("#roi_est_payback_years");
-      const monthsField = qs("#roi_est_payback_months");
+  function pushRoiIntoLeadForm() {
+  const savingsField = qs("#roi_est_annual_savings");
+  const yearsField = qs("#roi_est_payback_years");
+  const monthsField = qs("#roi_est_payback_months");
+  const portfolioLocationsField = qs("#roi_est_portfolio_locations");
+  const portfolioSavingsField = qs("#roi_est_portfolio_savings");
 
-      if (!savingsField || !yearsField || !monthsField) return;
+  if (!savingsField || !yearsField || !monthsField) return;
 
-      const { annualSavings, paybackYears } = computeROI();
-      const paybackMonths = isFinite(paybackYears) ? Math.round(paybackYears * 12) : "";
+  const { annualSavings, paybackYears, locationCount, portfolioAnnualSavings } = computeROI();
 
-      savingsField.value = isFinite(annualSavings) ? Math.round(annualSavings).toString() : "";
-      yearsField.value = isFinite(paybackYears) ? paybackYears.toFixed(2) : "";
-      monthsField.value = paybackMonths !== "" ? paybackMonths.toString() : "";
-    }
+  const paybackMonths = isFinite(paybackYears) ? Math.round(paybackYears * 12) : "";
+
+  savingsField.value = isFinite(annualSavings) ? Math.round(annualSavings).toString() : "";
+  yearsField.value = isFinite(paybackYears) ? paybackYears.toFixed(2) : "";
+  monthsField.value = paybackMonths !== "" ? paybackMonths.toString() : "";
+
+  if (portfolioLocationsField) {
+    portfolioLocationsField.value = locationCount ? locationCount.toString() : "";
+  }
+
+  if (portfolioSavingsField) {
+    portfolioSavingsField.value = isFinite(portfolioAnnualSavings)
+      ? Math.round(portfolioAnnualSavings).toString()
+      : "";
+  }
+}
 
     function renderROI() {
       if (!roiResultEl) return;
