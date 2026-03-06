@@ -167,32 +167,37 @@
         </div>
 
         <div class="card panel">
-          <form id="roiForm" class="calc" autocomplete="on">
-            <label for="annualSpend">Annual HVAC electricity spend (per location)</label>
-            <input id="annualSpend" name="annualSpend" type="number" min="0" step="100" value="6500" />
+        <form id="roiForm" class="calc" autocomplete="on">
+  <label for="annualSpend">Annual HVAC electricity spend (per location)</label>
+  <input id="annualSpend" name="annualSpend" type="number" min="0" step="100" value="6500" />
 
-            <label for="savingsPct">Expected HVAC savings (%)</label>
-            <input id="savingsPct" name="savingsPct" type="number" min="0" max="60" step="1" value="18" />
+  <label for="savingsPct">Expected HVAC savings (%)</label>
+  <input id="savingsPct" name="savingsPct" type="number" min="0" max="60" step="1" value="18" />
 
-           <label for="systemCost">Estimated RTU-X installed cost (per location)</label>
-<input id="systemCost" name="systemCost" type="number" min="0" step="100" value="3995" />
+  <label for="systemCost">Estimated RTU-X installed cost (per location)</label>
+  <input id="systemCost" name="systemCost" type="number" min="0" step="100" value="3995" />
+  <div class="fine">
+    Default estimate shown. Final installed pricing will be confirmed after site intake and pilot evaluation.
+  </div>
 
-<div class="fine">
-Default estimate shown. Final installed pricing will be confirmed after site intake and pilot evaluation.
-</div>
+  <label for="roiLocations">Number of locations (for portfolio estimate)</label>
+  <input id="roiLocations" name="roiLocations" type="number" min="1" step="1" value="10" />
+  <div class="fine">
+    Portfolio estimate multiplies annual savings by your location count. Payback remains per-location.
+  </div>
 
-            <div class="result" id="roiResult" aria-live="polite">Enter values to estimate payback.</div>
-            <div class="result" id="roiPortfolio" aria-live="polite"></div>
+  <div class="result" id="roiResult" aria-live="polite">Enter values to estimate payback.</div>
+  <div class="result" id="roiPortfolio" aria-live="polite"></div>
 
-            <div class="cta-row">
-              <button class="btn primary" type="button" id="calcBtn">Calculate</button>
-              <a class="btn" href="#contact">Request estimate</a>
-            </div>
+  <div class="cta-row">
+    <button class="btn primary" type="button" id="calcBtn">Calculate</button>
+    <a class="btn" href="#contact">Request estimate</a>
+  </div>
 
-            <div class="fine">
-              Disclaimer: estimates are illustrative and not guarantees. Actual results vary by runtime, unit condition, controls, weather, and site factors.
-            </div>
-          </form>
+  <div class="fine">
+    Disclaimer: estimates are illustrative and not guarantees. Actual results vary by runtime, unit condition, controls, weather, and site factors.
+  </div>
+</form>
         </div>
       </div>
     </section>
