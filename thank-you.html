@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Request received | RTU-X Energy, LLC</title>
-  <meta name="description" content="Your RTU-X savings estimate request was received. Next steps for a disciplined pilot rollout." />
+  <meta name="description" content="Your RTU-X savings estimate request was received. Next steps for a disciplined pilot evaluation." />
   <meta name="theme-color" content="#0b1220" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,17 +28,17 @@
         <a href="/#contact">Contact</a>
       </nav>
 
-      <a class="btn primary" href="/#contact">Request a savings estimate</a>
+      <a class="btn primary" href="/#contact">Start a pilot evaluation</a>
     </div>
   </header>
 
-  <main class="wrap" style="padding-top: 22px;">
-    <section class="section reveal" style="padding-top: 28px;">
+  <main class="wrap" style="padding-top:22px;">
+    <section class="section reveal" style="padding-top:28px;">
       <div class="sec-head">
         <div>
           <h2>Request received</h2>
           <p class="lead">
-            Thank you — we’ve got it. A member of <b>RTU-X Energy, LLC</b> will review your details and follow up shortly.
+            Thank you — your information has been received. We’ll review your submission and determine whether your portfolio appears to be a strong fit for a disciplined RTU-X pilot evaluation.
           </p>
         </div>
       </div>
@@ -48,39 +48,52 @@
           <div class="panel-top">
             <div>
               <div class="kicker">What happens next</div>
-              <div class="muted">Pilot-first rollout for clean proof, then scale.</div>
+              <div class="muted">A structured, low-friction evaluation process.</div>
             </div>
             <div class="badge" aria-hidden="true">✅</div>
           </div>
 
-          <ul class="bullets">
-            <li><b>Confirm site basics</b> (locations, RTUs, schedules, utility context)</li>
-            <li><b>Baseline plan</b> (what we’ll measure and success criteria)</li>
-            <li><b>Install & verify</b> (commissioning + measurement window)</li>
-            <li><b>Scale decision</b> (rollout plan across your portfolio)</li>
-          </ul>
+          <div class="cols3" style="grid-template-columns:1fr; margin-top:14px;">
+            <div class="card item">
+              <div class="icon blue">1</div>
+              <h3>We review your submission</h3>
+              <p>We look at your location count, estimated HVAC spend, operating profile, and potential pilot fit.</p>
+            </div>
 
-          <div class="callout" style="margin-top:14px">
-            <div class="callout-k">Need to reach us immediately?</div>
-            <div class="callout-d">
-              Email <b>dan@rtu-x.com</b> and we’ll prioritize your request.
+            <div class="card item">
+              <div class="icon">2</div>
+              <h3>We outline next steps</h3>
+              <p>If your portfolio looks like a good candidate, we follow up with pilot assumptions, measurement logic, and implementation considerations.</p>
+            </div>
+
+            <div class="card item">
+              <div class="icon warn">3</div>
+              <h3>You decide whether to proceed</h3>
+              <p>There is no obligation. The goal is to help you evaluate a measured pilot opportunity before making any larger rollout decision.</p>
             </div>
           </div>
 
-          <div class="cta" style="margin-top: 16px;">
+          <div class="callout" style="margin-top:16px">
+            <div class="callout-k">Expected response</div>
+            <div class="callout-d">
+              We aim to review and respond promptly. If your request is time-sensitive, email <b>dan@rtu-x.com</b>.
+            </div>
+          </div>
+
+          <div class="cta" style="margin-top:16px">
             <a class="btn primary" href="/#roi">Back to ROI calculator</a>
             <a class="btn" href="/#top">Back to homepage</a>
           </div>
 
           <div class="fine" style="margin-top:10px">
-            Disclaimer: this site provides illustrative estimates and does not guarantee savings. Actual results vary by site conditions and operating parameters.
+            This submission starts an evaluation process — not a commitment. Pilot decisions are intended to be made using measured site data and clear next-step logic.
           </div>
         </div>
 
         <div class="card panel">
           <div class="panel-top">
             <div>
-              <div class="kicker">Why this is warranty-conscious</div>
+              <div class="kicker">Why operators use RTU-X</div>
               <div class="muted">Designed to optimize — not alter — factory rooftop equipment.</div>
             </div>
             <div class="badge blue" aria-hidden="true">⚙️</div>
@@ -90,10 +103,18 @@
             <li>Non-invasive 24V intercept architecture</li>
             <li>Fail-safe OEM default on loss of power</li>
             <li>CT-based monitoring to support proof of savings</li>
+            <li>Pilot-first process before broader rollout</li>
           </ul>
 
-          <div class="pill small" style="margin-top: 10px;">
-            You’re in the right place: <b>pilot-first rollout</b> for clean proof, then scale.
+          <div class="pill small" style="margin-top:10px;">
+            RTU-X is built for operators who want <b>measured results, low disruption, and scalable deployment.</b>
+          </div>
+
+          <div class="callout" style="margin-top:14px">
+            <div class="callout-k">Why this page matters</div>
+            <div class="callout-d">
+              You are not entering a generic sales funnel. You are entering a structured pilot evaluation path designed to reduce uncertainty and support better rollout decisions.
+            </div>
           </div>
         </div>
       </div>
@@ -116,12 +137,6 @@
     </footer>
   </main>
 
-  <script>
-    // keep year current
-    (function () {
-      var y = document.getElementById("year");
-      if (y) y.textContent = String(new Date().getFullYear());
-    })();
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
