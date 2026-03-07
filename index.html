@@ -395,7 +395,7 @@
         <div>
           <h2>ROI calculator</h2>
           <p class="lead">
-            Use conservative inputs. For pilots, we validate with baseline + post-install measurement.
+            Use conservative inputs. For pilots, we validate results with baseline + post-install measurement.
           </p>
         </div>
       </div>
@@ -404,20 +404,28 @@
         <div class="card panel">
           <div class="panel-top">
             <div>
-              <div class="kicker">Owners trust simple math</div>
-              <div class="muted">Savings = HVAC spend × improvement %. ROI = investment ÷ annual savings.</div>
+              <div class="kicker">How operators evaluate RTU-X</div>
+              <div class="muted">A serious pilot decision starts with simple financial clarity.</div>
             </div>
             <div class="badge warn" aria-hidden="true">💰</div>
           </div>
 
           <ul class="bullets">
-            <li>Best fit: high runtime sites, higher energy rates, demand charge markets</li>
-            <li>We underwrite conservatively and prove results with measurement</li>
-            <li>Optional financing/shared-savings models can reduce upfront friction</li>
+            <li><b>Annual savings</b> shows the estimated per-location energy reduction opportunity.</li>
+            <li><b>Payback period</b> shows how quickly the installed cost may be recovered.</li>
+            <li><b>5-year and 10-year profit</b> help operators evaluate the longer-term financial impact after investment.</li>
+            <li><b>Portfolio results</b> show how small per-location savings can become meaningful across multiple stores.</li>
           </ul>
 
-          <div class="pill small">
-            Tip: After calculating, click <b>“Request a savings estimate”</b> below to send us your details.
+          <div class="callout" style="margin-top:14px">
+            <div class="callout-k">How to read these numbers</div>
+            <div class="callout-d">
+              Start with per-location payback, then evaluate 5-year and 10-year profit, then look at total portfolio impact across your locations.
+            </div>
+          </div>
+
+          <div class="pill small" style="margin-top:14px">
+            Tip: After calculating, submit your request and we’ll review whether your portfolio appears to be a strong pilot candidate.
           </div>
         </div>
 
@@ -442,7 +450,11 @@
             </div>
 
             <div class="result" id="roiResult" aria-live="polite">Enter values to estimate payback.</div>
+            <div class="result" id="roiProfit5yr" aria-live="polite"></div>
+            <div class="result" id="roiProfit10yr" aria-live="polite"></div>
             <div class="result" id="roiPortfolio" aria-live="polite"></div>
+            <div class="result" id="roiPortfolio5yr" aria-live="polite"></div>
+            <div class="result" id="roiPortfolio10yr" aria-live="polite"></div>
 
             <div class="cta-row">
               <button class="btn primary" type="button" id="calcBtn">Calculate</button>
@@ -884,13 +896,6 @@
               By submitting, you agree we may contact you to discuss a pilot. We never sell your data.
             </div>
           </form>
-
-          <script>
-            (function () {
-              var el = document.getElementById("lead_page");
-              if (el) el.value = window.location.href;
-            })();
-          </script>
         </div>
 
         <div class="card panel">
