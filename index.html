@@ -19,7 +19,7 @@
 <div class="wrap nav">
 
 <a class="brand" href="#top">
-<img class="brand-logo" src="assets/rtux-logo.png"/>
+<img class="brand-logo" src="assets/rtux-logo.png" alt="RTU-X Optimization Module logo"/>
 </a>
 
 <nav class="navlinks">
@@ -53,7 +53,7 @@ Reduce rooftop HVAC energy waste
 </h1>
 
 <p class="sub">
-The <b>RTU-X Optimization Module</b> is a plug-and-play rooftop HVAC optimization system designed for franchise portfolios.  
+The <b>RTU-X Optimization Module</b> is a plug-and-play rooftop HVAC optimization system designed for franchise portfolios.
 Our non-invasive architecture improves runtime efficiency while preserving OEM safety behavior.
 </p>
 
@@ -117,7 +117,6 @@ Validate performance first, then scale across the portfolio.
 </div>
 </section>
 
-
 <!-- ROI -->
 <section id="roi" class="section reveal">
 
@@ -133,7 +132,6 @@ Use conservative inputs. Pilot testing validates results before rollout.
 <div class="roi">
 
 <!-- LEFT COLUMN -->
-
 <div class="card panel">
 
 <div class="panel-top">
@@ -151,10 +149,7 @@ Use conservative inputs. Pilot testing validates results before rollout.
 <li><b>Portfolio math</b> demonstrates how small improvements scale.</li>
 </ul>
 
-<!-- PORTFOLIO SCALE BARS FIRST -->
-
 <div class="callout" style="margin-top:16px">
-
 <div class="callout-k">Portfolio scale impact</div>
 <div class="muted">Savings grow rapidly as location count increases.</div>
 
@@ -191,22 +186,44 @@ Use conservative inputs. Pilot testing validates results before rollout.
 </div>
 </div>
 
-<!-- EXAMPLE NUMBERS SECOND -->
-
 <div class="callout" style="margin-top:16px">
-
 <div class="callout-k">Example portfolio impact</div>
-
 <div class="callout-d">
-
 10 locations → approximately $11,700/year<br><br>
-
 25 locations → approximately $29,250/year<br><br>
-
 50 locations → approximately $58,500/year
-
+</div>
 </div>
 
+<div class="callout" style="margin-top:16px">
+<div class="callout-k">Live portfolio savings counter</div>
+<div class="callout-d">Based on your current calculator inputs:</div>
+
+<div style="margin-top:12px; display:grid; gap:10px;">
+  <div style="padding:12px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);">
+    <div class="muted" style="font-size:12px;">Annual portfolio savings</div>
+    <div id="livePortfolioAnnual" style="font-size:24px; font-weight:900; line-height:1.1;">$11,700</div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+    <div style="padding:12px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);">
+      <div class="muted" style="font-size:12px;">5-year portfolio value</div>
+      <div id="livePortfolio5yr" style="font-size:20px; font-weight:900; line-height:1.1;">$18,550</div>
+    </div>
+
+    <div style="padding:12px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);">
+      <div class="muted" style="font-size:12px;">10-year portfolio value</div>
+      <div id="livePortfolio10yr" style="font-size:20px; font-weight:900; line-height:1.1;">$77,050</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="callout" style="margin-top:16px">
+<div class="callout-k">Decision insight</div>
+<div class="callout-d">
+Many operators focus first on a single store. The stronger business case often appears when the same savings are viewed across the full portfolio.
+</div>
 </div>
 
 <div class="pill small" style="margin-top:16px">
@@ -216,21 +233,20 @@ Small efficiency gains become meaningful across a franchise portfolio.
 </div>
 
 <!-- RIGHT COLUMN CALCULATOR -->
-
 <div class="card panel">
 
 <form id="roiForm" class="calc">
 
-<label>Annual HVAC electricity spend</label>
+<label for="annualSpend">Annual HVAC electricity spend</label>
 <input id="annualSpend" type="number" value="6500"/>
 
-<label>Expected savings (%)</label>
+<label for="savingsPct">Expected savings (%)</label>
 <input id="savingsPct" type="number" value="18"/>
 
-<label>Estimated system cost</label>
+<label for="systemCost">Estimated system cost</label>
 <input id="systemCost" type="number" value="3995"/>
 
-<label>Locations</label>
+<label for="roiLocations">Locations</label>
 <input id="roiLocations" type="number" value="10"/>
 
 <div class="result" id="roiResult">
@@ -240,6 +256,8 @@ Enter values to estimate payback.
 <div class="result" id="roiProfit5yr"></div>
 <div class="result" id="roiProfit10yr"></div>
 <div class="result" id="roiPortfolio"></div>
+<div class="result" id="roiPortfolio5yr"></div>
+<div class="result" id="roiPortfolio10yr"></div>
 
 <div class="cta-row">
 <button class="btn primary" type="button" id="calcBtn">Calculate</button>
@@ -253,11 +271,126 @@ Enter values to estimate payback.
 </div>
 </section>
 
+<!-- CONTACT -->
+<section id="contact" class="section reveal">
+<div class="sec-head">
+<div>
+<h2>Request a savings estimate</h2>
+<p class="lead">Send your details and we’ll respond with a conservative estimate and a pilot plan.</p>
+</div>
+</div>
+
+<div class="split">
+<div class="card panel">
+<div class="panel-top">
+<div>
+<div class="kicker">Get a conservative estimate</div>
+<div class="muted">We’ll follow up with next steps for a controlled pilot.</div>
+</div>
+<div class="badge">✉️</div>
+</div>
+
+<form id="leadForm" class="leadform" action="https://formspree.io/f/xreyzbor" method="POST" autocomplete="on">
+<input type="hidden" name="_next" value="https://rtu-x.com/thank-you.html">
+
+<input type="hidden" id="roi_est_annual_savings" name="roi_est_annual_savings" value="">
+<input type="hidden" id="roi_est_payback_years" name="roi_est_payback_years" value="">
+<input type="hidden" id="roi_est_payback_months" name="roi_est_payback_months" value="">
+<input type="hidden" id="roi_est_portfolio_locations" name="roi_est_portfolio_locations" value="">
+<input type="hidden" id="roi_est_portfolio_savings" name="roi_est_portfolio_savings" value="">
+<input type="hidden" id="roi_est_profit_5yr" name="roi_est_profit_5yr" value="">
+<input type="hidden" id="roi_est_profit_10yr" name="roi_est_profit_10yr" value="">
+<input type="hidden" id="roi_est_portfolio_profit_5yr" name="roi_est_portfolio_profit_5yr" value="">
+<input type="hidden" id="roi_est_portfolio_profit_10yr" name="roi_est_portfolio_profit_10yr" value="">
+
+<div class="row2">
+<div>
+<label for="fname">First name</label>
+<input id="fname" name="firstName" type="text" required>
+</div>
+<div>
+<label for="lname">Last name</label>
+<input id="lname" name="lastName" type="text" required>
+</div>
+</div>
+
+<div class="row2">
+<div>
+<label for="email">Email</label>
+<input id="email" name="email" type="email" required>
+</div>
+<div>
+<label for="phone">Phone (optional)</label>
+<input id="phone" name="phone" type="tel">
+</div>
+</div>
+
+<div class="row2">
+<div>
+<label for="company">Company</label>
+<input id="company" name="company" type="text" required>
+</div>
+<div>
+<label for="locations">Number of locations</label>
+<select id="locations" name="locations" required>
+<option value="" selected disabled>Select…</option>
+<option>1</option>
+<option>2–4</option>
+<option>5–10</option>
+<option>11–25</option>
+<option>25+</option>
+</select>
+</div>
+</div>
+
+<div class="row2">
+<div>
+<label for="rtus">Avg RTUs per location</label>
+<select id="rtus" name="rtus" required>
+<option value="" selected disabled>Select…</option>
+<option>1</option>
+<option>2</option>
+<option>3+</option>
+</select>
+</div>
+<div>
+<label for="spend">Approx annual HVAC spend ($)</label>
+<input id="spend" name="spend" type="number" min="0" step="100" placeholder="6500" required>
+</div>
+</div>
+
+<label for="msg">Message (optional)</label>
+<textarea id="msg" name="message" rows="4" placeholder="Anything we should know (markets, demand charges, timeline)"></textarea>
+
+<input type="hidden" name="source" value="rtu-x.com savings estimate form">
+<input type="hidden" name="page" id="lead_page" value="">
+
+<button class="btn primary" type="submit">Submit request</button>
+</form>
+
+</div>
+
+<div class="card panel">
+<div class="panel-top">
+<div>
+<div class="kicker">RTU-X Energy, LLC</div>
+<div class="muted">Designed to optimize—not alter—factory rooftop equipment.</div>
+</div>
+<div class="badge blue">❓</div>
+</div>
+
+<div class="callout" style="margin-top:14px">
+<div class="callout-k">Next step</div>
+<div class="callout-d">
+Submit your details and we’ll review your portfolio for pilot fit.
+</div>
+</div>
+</div>
+</div>
+</section>
 
 <footer class="site-footer">
-
 <div class="foot">
-
 <div>
 <div class="foot-brand">RTU-X Energy, LLC</div>
 <div class="muted">
@@ -271,9 +404,7 @@ Plug-and-play rooftop HVAC optimization for franchise portfolios.
 <a href="#roi">ROI</a>
 <a href="#contact">Contact</a>
 </div>
-
 </div>
-
 </footer>
 
 </main>
