@@ -178,7 +178,15 @@ h2{margin:0; font-size:28px; letter-spacing:-.01em}
 .bullets li{margin:6px 0}
 
 /* ROI */
-.roi{display:grid; grid-template-columns:1.1fr .9fr; gap:14px; align-items:stretch}
+.roi{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:14px;
+  align-items:start;
+}
+.roi .panel{
+  align-self:start;
+}
 @media (max-width: 940px){.roi{grid-template-columns:1fr}}
 .calc{
   padding:16px;
