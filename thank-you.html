@@ -3,68 +3,103 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Thank You | RTU-X Energy</title>
+  <title>Request Received | RTU-X Energy</title>
   <meta
     name="description"
-    content="Your RTU-X request has been received. Book your savings review and evaluate your multi-location HVAC energy savings opportunity."
+    content="Your RTU-X request has been received. Review how RTU-X helps multi-location operators reduce rooftop HVAC energy waste through a disciplined pilot-first process."
   />
   <meta name="theme-color" content="#0b1220" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;650;750;850&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 
   <style>
     body.thankyou-page {
+      margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at top right, rgba(90,167,255,.16), transparent 32%),
-        radial-gradient(circle at top left, rgba(77,227,161,.10), transparent 28%),
-        linear-gradient(180deg, #08111f 0%, #0b1220 100%);
+        radial-gradient(circle at top right, rgba(90,167,255,.18), transparent 28%),
+        radial-gradient(circle at top left, rgba(77,227,161,.10), transparent 24%),
+        linear-gradient(180deg, #07101d 0%, #0b1220 100%);
+      color: #eaf1ff;
+      font-family: 'Montserrat', sans-serif;
     }
 
-    .thankyou-shell {
-      min-height: 100vh;
+    .thankyou-wrap {
+      width: min(1520px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .thankyou-header {
+      padding: 22px 0;
+    }
+
+    .thankyou-nav {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .thankyou-brand img {
+      height: 52px;
+      width: auto;
+      display: block;
+    }
+
+    .thankyou-toplink {
+      color: #d9e5ff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      opacity: .92;
+    }
+
+    .thankyou-toplink:hover {
+      opacity: 1;
     }
 
     .thankyou-main {
-      flex: 1;
+      min-height: calc(100vh - 110px);
       display: flex;
       align-items: center;
-      padding: 44px 0 56px;
+      padding: 20px 0 42px;
     }
 
-    .thankyou-hero {
+    .thankyou-grid {
       display: grid;
-      grid-template-columns: 1.15fr .85fr;
+      grid-template-columns: 1.2fr .8fr;
       gap: 28px;
       align-items: stretch;
     }
 
-    .thankyou-big {
-      min-height: 620px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 42px;
+    .thankyou-primary,
+    .thankyou-card {
       border-radius: 28px;
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 30px 90px rgba(0,0,0,.34);
+      box-shadow: 0 24px 80px rgba(0,0,0,.34);
     }
 
-    .thankyou-side {
+    .thankyou-primary {
+      padding: 46px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 690px;
+    }
+
+    .thankyou-cards {
       display: grid;
-      gap: 18px;
+      gap: 20px;
     }
 
-    .thankyou-side .panel {
-      height: 100%;
+    .thankyou-card {
+      padding: 26px;
     }
 
-    .eyebrow {
+    .thankyou-pill {
       display: inline-flex;
       align-items: center;
       gap: 10px;
@@ -72,171 +107,183 @@
       padding: 10px 14px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      color: #dbe7ff;
+      border: 1px solid rgba(255,255,255,.10);
       font-size: 12px;
       font-weight: 800;
       letter-spacing: .02em;
-      margin-bottom: 18px;
+      color: #dfe9ff;
+      margin-bottom: 20px;
     }
 
-    .eyebrow-dot {
+    .thankyou-dot {
       width: 8px;
       height: 8px;
       border-radius: 999px;
-      background: linear-gradient(135deg, rgba(77,227,161,.98), rgba(90,167,255,.98));
+      background: linear-gradient(135deg, rgba(77,227,161,1), rgba(90,167,255,1));
       box-shadow: 0 0 0 6px rgba(77,227,161,.12);
     }
 
     .thankyou-title {
-      font-size: clamp(38px, 6vw, 68px);
-      line-height: .98;
-      letter-spacing: -.03em;
       margin: 0 0 18px;
-      color: #fff;
+      font-size: clamp(44px, 6vw, 78px);
+      line-height: .96;
+      letter-spacing: -.04em;
+      font-weight: 800;
+      color: #ffffff;
     }
 
     .thankyou-sub {
-      max-width: 720px;
+      margin: 0 0 22px;
+      max-width: 860px;
       font-size: 18px;
-      line-height: 1.65;
-      color: #c9d7f2;
-      margin: 0 0 28px;
+      line-height: 1.72;
+      color: #c8d6f1;
+      font-weight: 500;
+    }
+
+    .thankyou-sub strong {
+      color: #ffffff;
+      font-weight: 700;
     }
 
     .thankyou-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 14px;
-      margin-top: 8px;
+      margin: 12px 0 28px;
     }
 
-    .thankyou-actions .btn {
-      min-width: 220px;
-      text-align: center;
+    .thankyou-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 240px;
+      padding: 15px 24px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      transition: transform .18s ease, opacity .18s ease, border-color .18s ease;
+    }
+
+    .thankyou-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .thankyou-btn.primary {
+      background: linear-gradient(135deg, rgba(77,227,161,.98), rgba(90,167,255,.98));
+      color: #07111d;
+      box-shadow: 0 16px 30px rgba(56,133,255,.18);
+    }
+
+    .thankyou-btn.secondary {
+      color: #eaf1ff;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
     }
 
     .thankyou-proof {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 28px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 8px;
     }
 
-    .thankyou-proof .mini {
-      padding: 16px;
+    .thankyou-proof-item {
+      padding: 18px;
       border-radius: 18px;
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.08);
     }
 
-    .thankyou-proof .mini-k {
+    .thankyou-proof-k {
+      margin-bottom: 6px;
       font-size: 12px;
       font-weight: 800;
-      color: #e9f0ff;
-      margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: .03em;
+      color: #ffffff;
     }
 
-    .thankyou-proof .mini-d {
+    .thankyou-proof-d {
       font-size: 14px;
-      line-height: 1.55;
-      color: #b8c8e6;
+      line-height: 1.6;
+      color: #bdd0ee;
+      font-weight: 500;
+    }
+
+    .thankyou-callout {
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      color: #d9e5ff;
+      font-size: 14px;
+      line-height: 1.65;
+      font-weight: 500;
+    }
+
+    .thankyou-card-title {
+      margin: 0 0 6px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .thankyou-card-sub {
+      margin: 0 0 14px;
+      color: #9eb4da;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     .thankyou-list {
-      margin: 14px 0 0;
+      margin: 0;
       padding-left: 18px;
+      color: #d4e1f8;
     }
 
     .thankyou-list li {
-      margin: 0 0 10px;
-    }
-
-    .thankyou-footer-note {
-      margin-top: 24px;
-      color: #9fb3d9;
+      margin-bottom: 10px;
+      line-height: 1.7;
       font-size: 14px;
+      font-weight: 500;
     }
 
-    .thankyou-brandbar {
-      padding-top: 18px;
-    }
-
-    .thankyou-topnav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .thankyou-logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-    }
-
-    .thankyou-logo img {
-      height: 44px;
-      width: auto;
-      display: block;
-    }
-
-    .thankyou-logo-text {
-      color: #dce8ff;
-      font-weight: 800;
-      letter-spacing: .02em;
-      font-size: 13px;
-      text-transform: uppercase;
-    }
-
-    .thankyou-toplink {
-      color: #dce8ff;
-      text-decoration: none;
-      font-weight: 700;
+    .thankyou-note {
+      color: #c8d6f1;
       font-size: 14px;
-      opacity: .9;
+      line-height: 1.7;
+      font-weight: 500;
     }
 
-    .thankyou-toplink:hover {
-      opacity: 1;
-    }
-
-    .thankyou-sitefoot {
-      padding-bottom: 28px;
-      color: #93a8cf;
+    .thankyou-footer {
+      padding: 0 0 30px;
+      color: #95abd2;
       font-size: 13px;
+      font-weight: 600;
     }
 
-    @media (max-width: 980px) {
-      .thankyou-hero {
+    @media (max-width: 1180px) {
+      .thankyou-grid {
         grid-template-columns: 1fr;
       }
 
-      .thankyou-big {
+      .thankyou-primary {
         min-height: auto;
       }
     }
 
-    @media (max-width: 720px) {
-      .thankyou-main {
-        padding: 24px 0 34px;
+    @media (max-width: 860px) {
+      .thankyou-wrap {
+        width: min(100%, calc(100% - 28px));
       }
 
-      .thankyou-big {
-        padding: 26px;
-        border-radius: 22px;
-      }
-
-      .thankyou-proof {
-        grid-template-columns: 1fr;
-      }
-
-      .thankyou-actions .btn {
-        width: 100%;
-        min-width: 0;
+      .thankyou-primary {
+        padding: 28px;
       }
 
       .thankyou-title {
@@ -246,132 +293,141 @@
       .thankyou-sub {
         font-size: 16px;
       }
+
+      .thankyou-proof {
+        grid-template-columns: 1fr;
+      }
+
+      .thankyou-actions {
+        flex-direction: column;
+      }
+
+      .thankyou-btn {
+        width: 100%;
+        min-width: 0;
+      }
     }
   </style>
 </head>
 
 <body class="thankyou-page">
-  <div class="thankyou-shell">
-    <header class="thankyou-brandbar">
-      <div class="wrap thankyou-topnav">
-        <a class="thankyou-logo" href="index.html" aria-label="RTU-X Energy home">
-          <img src="assets/rtux-logo.png" alt="RTU-X Energy logo" />
-          <span class="thankyou-logo-text">RTU-X Energy</span>
-        </a>
+  <header class="thankyou-header">
+    <div class="thankyou-wrap thankyou-nav">
+      <a class="thankyou-brand" href="index.html" aria-label="RTU-X Energy home">
+        <img src="assets/rtux-logo.png" alt="RTU-X Energy logo" />
+      </a>
 
-        <a class="thankyou-toplink" href="index.html">← Back to site</a>
-      </div>
-    </header>
+      <a class="thankyou-toplink" href="index.html">← Back to RTU-X site</a>
+    </div>
+  </header>
 
-    <main class="thankyou-main">
-      <div class="wrap">
-        <section class="thankyou-hero">
-          <div class="thankyou-big">
-            <div class="eyebrow">
-              <span class="eyebrow-dot" aria-hidden="true"></span>
-              Request received • Multi-location savings review
-            </div>
+  <main class="thankyou-main">
+    <div class="thankyou-wrap">
+      <section class="thankyou-grid">
+        <div class="thankyou-primary">
+          <div class="thankyou-pill">
+            <span class="thankyou-dot" aria-hidden="true"></span>
+            Request received • Operator review in progress
+          </div>
 
-            <h1 class="thankyou-title">
-              Great move.<br />
-              Your RTU-X request is in.
-            </h1>
+          <h1 class="thankyou-title">
+            Your request has been received.
+            Now let’s evaluate the real savings opportunity.
+          </h1>
 
-            <p class="thankyou-sub">
-              You’ve taken the first step toward evaluating whether your locations have a
-              real, measurable rooftop HVAC energy savings opportunity. Now the goal is simple:
-              determine whether a controlled pilot makes financial sense for your portfolio.
-            </p>
+          <p class="thankyou-sub">
+            Thank you for contacting <strong>RTU-X Energy</strong>. Your submission begins a more disciplined process than a typical product inquiry.
+            We are not trying to sell you a gadget and hope for the best. We are working to determine whether your locations may be a strong fit
+            for a <strong>measured rooftop HVAC energy savings strategy</strong> built around pilot validation, operational repeatability, and portfolio-scale economics.
+          </p>
 
-            <div class="thankyou-actions">
-              <a class="btn primary" href="https://calendly.com/" target="_blank" rel="noopener noreferrer">
-                Book a 20-minute savings review
-              </a>
-              <a class="btn" href="index.html#roi">
-                Return to ROI calculator
-              </a>
-            </div>
+          <p class="thankyou-sub">
+            In other words, the goal is not simply to install something. The goal is to determine whether your existing rooftop units represent a
+            meaningful financial opportunity worth validating and, if proven, worth scaling.
+          </p>
 
-            <div class="thankyou-proof">
-              <div class="mini">
-                <div class="mini-k">Low pressure</div>
-                <div class="mini-d">This is a structured fit check, not a high-pressure sales pitch.</div>
-              </div>
-              <div class="mini">
-                <div class="mini-k">Pilot first</div>
-                <div class="mini-d">We evaluate opportunity with discipline before discussing broader rollout.</div>
-              </div>
-              <div class="mini">
-                <div class="mini-k">Portfolio focused</div>
-                <div class="mini-d">The real value appears when measured savings can scale across multiple sites.</div>
+          <div class="thankyou-actions">
+            <a class="thankyou-btn primary" href="index.html#contact">
+              Return to the savings review form
+            </a>
+            <a class="thankyou-btn secondary" href="index.html#roi">
+              Review ROI and portfolio impact
+            </a>
+          </div>
+
+          <div class="thankyou-proof">
+            <div class="thankyou-proof-item">
+              <div class="thankyou-proof-k">Savings first</div>
+              <div class="thankyou-proof-d">
+                RTU-X is positioned around reducing avoidable HVAC energy waste, not just selling hardware.
               </div>
             </div>
 
-            <div class="thankyou-footer-note">
-              Prefer not to book right now? No problem — we’ll still follow up with you directly.
+            <div class="thankyou-proof-item">
+              <div class="thankyou-proof-k">Pilot first</div>
+              <div class="thankyou-proof-d">
+                We believe serious operators should validate economics through a controlled pilot before broader rollout.
+              </div>
+            </div>
+
+            <div class="thankyou-proof-item">
+              <div class="thankyou-proof-k">Portfolio thinking</div>
+              <div class="thankyou-proof-d">
+                Small per-location gains often become much more valuable when viewed across multiple stores.
+              </div>
             </div>
           </div>
 
-          <div class="thankyou-side">
-            <div class="card panel">
-              <div class="panel-top">
-                <div>
-                  <div class="kicker">What happens next</div>
-                  <div class="muted">Clear process. Stronger momentum.</div>
-                </div>
-                <div class="badge" aria-hidden="true">✅</div>
-              </div>
+          <div class="thankyou-callout">
+            You do not need to do anything else right now. We will review your submission and use it to determine whether a structured next-step conversation
+            makes sense. If you want to revisit the form or review the economics again, the buttons above keep you inside the RTU-X site.
+          </div>
+        </div>
 
-              <ul class="bullets thankyou-list">
-                <li>We review your location profile and operating context</li>
-                <li>We assess whether your portfolio appears to be a strong pilot candidate</li>
-                <li>We outline a conservative savings opportunity range</li>
-                <li>We map out a measured pilot structure and next-step recommendation</li>
-              </ul>
-            </div>
+        <div class="thankyou-cards">
+          <div class="thankyou-card">
+            <h2 class="thankyou-card-title">What happens next</h2>
+            <p class="thankyou-card-sub">Structured review. No generic follow-up.</p>
 
-            <div class="card panel">
-              <div class="panel-top">
-                <div>
-                  <div class="kicker">What we’ll cover on the call</div>
-                  <div class="muted">A business-first evaluation.</div>
-                </div>
-                <div class="badge blue" aria-hidden="true">📊</div>
-              </div>
+            <ul class="thankyou-list">
+              <li>We review your company, location count, and operating profile.</li>
+              <li>We assess whether your sites appear to be a realistic pilot candidate.</li>
+              <li>We consider where the strongest savings logic may exist across your portfolio.</li>
+              <li>We determine the most disciplined next step for evaluation.</li>
+            </ul>
+          </div>
 
-              <ul class="bullets thankyou-list">
-                <li>Whether your locations are a strong candidate for HVAC efficiency improvement</li>
-                <li>Estimated savings range based on your portfolio structure</li>
-                <li>How a pilot would be installed, reviewed, and measured</li>
-                <li>What a rollout could look like if the results support expansion</li>
-              </ul>
-            </div>
+          <div class="thankyou-card">
+            <h2 class="thankyou-card-title">What a serious RTU-X discussion should cover</h2>
+            <p class="thankyou-card-sub">Business logic before rollout logic.</p>
 
-            <div class="card panel">
-              <div class="panel-top">
-                <div>
-                  <div class="kicker">Important</div>
-                  <div class="muted">How RTU-X should be evaluated</div>
-                </div>
-                <div class="badge warn" aria-hidden="true">⚡</div>
-              </div>
+            <ul class="thankyou-list">
+              <li>Whether your locations appear to have repeatable HVAC waste worth addressing.</li>
+              <li>Whether a pilot can be structured in a low-disruption, measurable way.</li>
+              <li>What level of per-site savings would become meaningful across your full portfolio.</li>
+              <li>How pilot results would inform any broader rollout decision.</li>
+            </ul>
+          </div>
 
-              <div class="fine" style="margin-top:12px;">
-                RTU-X is not a “plug it in and hope” offer. It is a
-                <b>pilot-first savings model</b> designed to help operators validate
-                measurable energy reduction before making any portfolio-scale decision.
-              </div>
+          <div class="thankyou-card">
+            <h2 class="thankyou-card-title">Why this matters</h2>
+            <p class="thankyou-card-sub">The right framing is everything.</p>
+
+            <div class="thankyou-note">
+              RTU-X should feel like a disciplined operating-cost strategy, not a small aftermarket accessory.
+              The strongest conversations happen when buyers understand that the opportunity is not “a product on one roof,”
+              but rather a potential savings model that can be tested, measured, and expanded across multiple locations.
             </div>
           </div>
-        </section>
-      </div>
-    </main>
+        </div>
+      </section>
+    </div>
+  </main>
 
-    <footer class="thankyou-sitefoot">
-      <div class="wrap">
-        RTU-X Energy, LLC • Savings-focused rooftop HVAC optimization for multi-location operators
-      </div>
-    </footer>
-  </div>
+  <footer class="thankyou-footer">
+    <div class="thankyou-wrap">
+      RTU-X Energy, LLC • Savings-focused rooftop HVAC optimization for multi-location operators
+    </div>
+  </footer>
 </body>
 </html>
